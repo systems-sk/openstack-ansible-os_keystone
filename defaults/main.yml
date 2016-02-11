@@ -356,12 +356,16 @@ keystone_apt_packages:
   - dh-apparmor
   - docutils-common
   - git
+  - libffi-dev
   - libapache2-mod-wsgi
   - libjs-sphinxdoc
   - libjs-underscore
   - libldap2-dev
   - libsasl2-dev
   - libxslt1.1
+  - libxslt1-dev
+  - libxml2-dev
+  - python-dev
   - rsync
 
 keystone_idp_apt_packages:
@@ -384,9 +388,6 @@ keystone_pip_packages:
   - keystone
   - keystonemiddleware
   - ldappool
-  - libffi-dev
-  - libxslt1-dev
-  - libxml2-dev
   - lxml
   - PyMySQL
   - oslo.log
@@ -394,7 +395,6 @@ keystone_pip_packages:
   - pbr
   - pycrypto
   - pysaml2
-  - python-dev
   - python-keystoneclient
   - python-ldap
   - python-memcached
