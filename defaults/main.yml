@@ -345,7 +345,8 @@ keystone_ceilometer_enabled: false
 keystone_git_repo: https://git.openstack.org/openstack/keystone
 keystone_git_install_branch: master
 keystone_developer_mode: false
-keystone_developer_constraint: "git+{{ keystone_git_repo }}@{{ keystone_git_install_branch }}#egg=keystone"
+keystone_developer_constraints:
+  - "git+{{ keystone_git_repo }}@{{ keystone_git_install_branch }}#egg=keystone"
 
 # Common apt packages
 keystone_apt_packages:
@@ -367,6 +368,9 @@ keystone_idp_apt_packages:
   - ssl-cert
   - xmlsec1
 
+keystone_developer_apt_packages:
+  - build-essential
+
 # Keystone packages that must be installed before anything else
 keystone_requires_pip_packages:
   - virtualenv
@@ -380,6 +384,9 @@ keystone_pip_packages:
   - keystone
   - keystonemiddleware
   - ldappool
+  - libffi-dev
+  - libxslt1-dev
+  - libxml2-dev
   - lxml
   - PyMySQL
   - oslo.log
@@ -387,6 +394,7 @@ keystone_pip_packages:
   - pbr
   - pycrypto
   - pysaml2
+  - python-dev
   - python-keystoneclient
   - python-ldap
   - python-memcached
