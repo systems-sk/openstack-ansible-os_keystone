@@ -349,33 +349,6 @@ keystone_developer_mode: false
 keystone_developer_constraints:
   - "git+{{ keystone_git_repo }}@{{ keystone_git_install_branch }}#egg=keystone"
 
-# Common apt packages
-keystone_apt_packages:
-  - apache2
-  - apache2-utils
-  - debhelper
-  - dh-apparmor
-  - docutils-common
-  - git
-  - libffi-dev
-  - libapache2-mod-wsgi
-  - libjs-sphinxdoc
-  - libjs-underscore
-  - libldap2-dev
-  - libsasl2-dev
-  - libxslt1.1
-  - libxslt1-dev
-  - libxml2-dev
-  - python-dev
-  - rsync
-
-keystone_idp_apt_packages:
-  - ssl-cert
-  - xmlsec1
-
-keystone_developer_apt_packages:
-  - build-essential
-
 # Keystone packages that must be installed before anything else
 keystone_requires_pip_packages:
   - virtualenv
