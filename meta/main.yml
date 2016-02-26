@@ -31,7 +31,9 @@ galaxy_info:
     - openstack
 dependencies:
   - apt_package_pinning
-  - galera_client
+  - role: galera_client
+    when:
+      - keystone_database_enabled | bool
   - role: pip_lock_down
     when:
       - not keystone_developer_mode | bool
