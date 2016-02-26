@@ -13,6 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Gather variables for each operating system
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  tags:
+    - always
+
 - include: keystone_pre_install.yml
 - include: keystone_install.yml
 - include: keystone_post_install.yml
@@ -25,41 +34,48 @@
 - include: keystone_fernet.yml
   tags:
     - keystone-fernet
-  when: >
-    'fernet' in keystone_token_provider
+  when:
+    - "'fernet' in keystone_token_provider"
+    - keystone_service_setup | bool
 
 - include: keystone_federation_sp_setup.yml
-  when: >
-    keystone_sp is defined
+  when:
+    - keystone_sp is defined
 
 - include: keystone_db_setup.yml
-  when: >
-    inventory_hostname == groups['keystone_all'][0]
+  when:
+    - keystone_database_enabled | bool
+    - inventory_hostname == groups['keystone_all'][0]
 
 - include: keystone_token_cleanup.yml
-  when: >
-    'sql' in keystone_token_driver
+  when:
+    - "'sql' in keystone_token_driver"
 
 - include: keystone_ssl.yml
 - include: keystone_apache.yml
 
 - include: keystone_service_setup.yml
-  when: >
-    inventory_hostname == groups['keystone_all'][0]
+  when:
+    - keystone_service_setup | bool
+    - inventory_hostname == groups['keystone_all'][0]
 
 - include: keystone_ldap_setup.yml
+  when:
+    - keystone_service_setup | bool
   tags:
     - keystone-config
     - keystone-ldap
 
 - include: keystone_federation_sp_idp_setup.yml
-  when: >
-    keystone_sp is defined and
-    inventory_hostname == groups['keystone_all'][0]
+  when:
+  when:
+    - keystone_service_setup | bool
+    - keystone_sp is defined
+    - inventory_hostname == groups['keystone_all'][0]
 
 - name: Flush handlers
   meta: flush_handlers
 
 - include: keystone_idp_setup.yml
-  when: >
-    keystone_idp is defined
+  when:
+    - keystone_idp is defined

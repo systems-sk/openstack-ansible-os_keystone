@@ -54,12 +54,15 @@ saml2 = keystone.auth.plugins.mapped.Mapped
 methods = {{ keystone_auth_methods }}
 {% endif %}
 
+
+{% if keystone_database_enabled | bool %}
 [database]
-connection = mysql+pymysql://{{ keystone_galera_user }}:{{ keystone_container_mysql_password }}@{{ keystone_galera_address }}/{{ keystone_galera_database }}?charset=utf8
+connection = {{ keystone_database_connection_string }}
 idle_timeout = {{ keystone_database_idle_timeout }}
 min_pool_size = {{ keystone_database_min_pool_size }}
 max_pool_size = {{ keystone_database_max_pool_size }}
 pool_timeout = {{ keystone_database_pool_timeout }}
+{% endif %}
 
 
 [fernet_tokens]
@@ -146,13 +149,15 @@ admin_bind_host = {{ keystone_bind_address }}
 admin_port = {{ keystone_admin_port }}
 public_port = {{ keystone_service_port }}
 
+{% if keystone_messaging_enabled | bool %}
 [oslo_messaging_rabbit]
-rabbit_port = {{ rabbitmq_port }}
+rabbit_port = {{ keystone_rabbitmq_port }}
 rabbit_userid = {{ keystone_rabbitmq_userid }}
 rabbit_password = {{ keystone_rabbitmq_password }}
 rabbit_virtual_host = {{ keystone_rabbitmq_vhost }}
-rabbit_hosts = {{ rabbitmq_servers }}
-rabbit_use_ssl = {{ rabbitmq_use_ssl }}
+rabbit_hosts = {{ keystone_rabbitmq_servers }}
+rabbit_use_ssl = {{ keystone_rabbitmq_use_ssl }}
+{% endif %}
 
 {% if keystone_sp is defined %}
 [federation]

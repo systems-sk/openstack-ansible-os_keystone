@@ -1,6 +1,6 @@
-OpenStack keystone
-##################
-:tags: openstack, keystone, cloud, ansible
+os_keystone
+########
+:tags: openstack, cloud, ansible
 :category: \*nix
 
 contributor guidelines

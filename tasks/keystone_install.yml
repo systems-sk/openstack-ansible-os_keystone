@@ -13,63 +13,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#TODO(evrardjp): Replace the next 2 tasks by a standard apt with cache
-#when https://github.com/ansible/ansible-modules-core/pull/1517 is merged
-#in 1.9.x or we move to 2.0 (if tested working)
-- name: Check apt last update file
-  stat:
-    path: /var/cache/apt
-  register: apt_cache_stat
+- include: keystone_install_apt.yml
+  when:
+    - ansible_pkg_mgr == 'apt'
   tags:
-    - keystone-apt-packages
+    - install-apt
 
-- name: Update apt if needed
-  apt:
-    update_cache: yes
-  when: "ansible_date_time.epoch|float - apt_cache_stat.stat.mtime > {{cache_timeout}}"
-  tags:
-    - keystone-apt-packages
-
-- name: Install apt packages
-  apt:
-    pkg: "{{ item }}"
-    state: latest
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: keystone_apt_packages
+- name: Create developer mode constraint file
+  copy:
+    dest: "/opt/developer-pip-constraints.txt"
+    content: |
+      {% for item in keystone_developer_constraints %}
+      {{ item }}
+      {% endfor %}
+  when:
+    - keystone_developer_mode | bool
   tags:
     - keystone-install
-    - keystone-apt-packages
+    - keystone-pip-packages
 
-- name: Install IdP apt packages
-  apt:
-    pkg: "{{ item }}"
-    state: latest
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: keystone_idp_apt_packages
-  when: keystone_idp is defined
+- name: Set constraint file fact for developer mode
+  set_fact:
+    pip_install_options: "{{ pip_install_options|default('') }} --constraint /opt/developer-pip-constraints.txt"
+  when:
+    - keystone_developer_mode | bool
   tags:
     - keystone-install
-    - keystone-apt-packages
-
-- name: Install SP apt packages
-  apt:
-    pkg: "{{ item }}"
-    state: latest
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: keystone_sp_apt_packages
-  when: keystone_sp is defined
-  tags:
-    - keystone-install
-    - keystone-apt-packages
+    - keystone-pip-packages
 
 - name: Install requires pip packages
   pip:
@@ -89,7 +59,9 @@
   stat:
     path: "/var/cache/{{ keystone_venv_download_url | basename }}"
     get_md5: False
-  when: keystone_venv_enabled | bool
+  when:
+    - not keystone_developer_mode | bool
+    - keystone_venv_enabled | bool
   register: local_venv_stat
   tags:
     - keystone-install
@@ -99,7 +71,9 @@
   uri:
     url: "{{ keystone_venv_download_url | replace('tgz', 'checksum') }}"
     return_content: True
-  when: keystone_venv_enabled | bool
+  when:
+    - not keystone_developer_mode | bool
+    - keystone_venv_enabled | bool
   register: remote_venv_checksum
   tags:
     - keystone-install
@@ -118,6 +92,7 @@
   ignore_errors: true
   register: get_venv
   when:
+    - not keystone_developer_mode | bool
     - keystone_venv_enabled | bool
     - (local_venv_stat.stat.exists == False or
         {{ local_venv_stat.stat.checksum is defined and local_venv_stat.stat.checksum != remote_venv_checksum.content | trim }})
@@ -149,6 +124,7 @@
     path: "{{ keystone_venv_bin | dirname }}"
     state: directory
   when:
+    - not keystone_developer_mode | bool
     - keystone_venv_enabled | bool
     - keystone_get_venv | changed
   tags:
@@ -161,6 +137,7 @@
     dest: "{{ keystone_venv_bin | dirname }}"
     copy: "no"
   when:
+    - not keystone_developer_mode | bool
     - keystone_venv_enabled | bool
     - keystone_get_venv | changed
   notify:
@@ -173,6 +150,7 @@
   command: >
     virtualenv-tools --update-path=auto {{ keystone_venv_bin | dirname }}
   when:
+    - not keystone_developer_mode | bool
     - keystone_venv_enabled | bool
     - keystone_get_venv | success
   tags:
@@ -193,7 +171,7 @@
   with_items: keystone_pip_packages
   when:
     - keystone_venv_enabled | bool
-    - keystone_get_venv | failed
+    - keystone_get_venv | failed or keystone_developer_mode | bool
   notify:
     - Restart Apache
   tags:
@@ -210,7 +188,9 @@
   retries: 5
   delay: 2
   with_items: keystone_pip_packages
-  when: not keystone_venv_enabled | bool
+  when:
+    - not keystone_developer_mode | bool
+    - not keystone_venv_enabled | bool
   notify:
     - Restart Apache
   tags:

@@ -31,10 +31,13 @@ galaxy_info:
     - openstack
 dependencies:
   - apt_package_pinning
-  - galera_client
-  - openstack_openrc
-  - pip_lock_down
+  - role: galera_client
+    when:
+      - keystone_database_enabled | bool
+  - role: pip_lock_down
+    when:
+      - not keystone_developer_mode | bool
   - role: memcached_server
-    when: >
-      'memcache' in keystone_token_driver and
-      'fernet' not in keystone_token_provider
+    when:
+      - "'memcache' in keystone_token_driver"
+      - "'fernet' not in keystone_token_provider"
