@@ -23,7 +23,7 @@ import pbr.version
 _version_ = pbr.version.VersionInfo('keystone').version_string()
 
 #TODO(cloudnull) This should be removed in the N time frame
-if '2015' in _version_:
+if '8' in _version_:
     from keystone.server import wsgi as wsgi_server
     name = os.path.basename(__file__)
     application = wsgi_server.initialize_application(name)
