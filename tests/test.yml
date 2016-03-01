@@ -33,7 +33,13 @@
 - name: Playbook for pre-role testing 2of3
   hosts: localhost
   connection: local
+  become: yes
   pre_tasks:
+    # Make sure OS does not have a stale package cache.
+    - name: Update apt cache.
+      apt:
+        update_cache: yes
+      when: ansible_os_family == 'Debian'
     - name: Ensure root's new public ssh key is in authorized_keys
       authorized_key:
         user: root
