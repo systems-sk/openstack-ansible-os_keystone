@@ -1,7 +1,8 @@
 # {{ ansible_managed }}
 
 <VirtualHost *:{{ keystone_service_port }}>
-    WSGIDaemonProcess     keystone-service user={{ keystone_system_user_name }} group={{ keystone_system_group_name }} processes={{ keystone_wsgi_processes }} threads={{ keystone_wsgi_threads }} display-name=%{GROUP}
+    WSGIDaemonProcess     keystone-service user={{ keystone_system_user_name }} group={{ keystone_system_group_name }} processes={{ keystone_wsgi_processes }} threads={{ keystone_wsgi_threads }} display-name=%{GROUP} {% if keystone_venv_enabled | bool %}python-path={{ keystone_venv_bin | dirname }}/lib/python2.7/site-packages{% endif %}
+
     WSGIProcessGroup      keystone-service
     WSGIScriptAlias       / /var/www/cgi-bin/keystone/main
     WSGIApplicationGroup  %{GLOBAL}
@@ -58,7 +59,8 @@
 </VirtualHost>
 
 <VirtualHost *:{{ keystone_admin_port }}>
-    WSGIDaemonProcess     keystone-admin user={{ keystone_system_user_name }} group={{ keystone_system_group_name }} processes={{ keystone_wsgi_processes }} threads={{ keystone_wsgi_threads }} display-name=%{GROUP}
+    WSGIDaemonProcess     keystone-admin user={{ keystone_system_user_name }} group={{ keystone_system_group_name }} processes={{ keystone_wsgi_processes }} threads={{ keystone_wsgi_threads }} display-name=%{GROUP} {% if keystone_venv_enabled | bool %}python-path={{ keystone_venv_bin | dirname }}/lib/python2.7/site-packages{% endif %}
+
     WSGIProcessGroup      keystone-admin
     WSGIScriptAlias       / /var/www/cgi-bin/keystone/admin
     WSGIApplicationGroup  %{GLOBAL}
