@@ -108,9 +108,6 @@ keystone_admin_user_name: admin
 keystone_admin_tenant_name: admin
 keystone_admin_description: Admin Tenant
 
-## Secure Proxy SSL Information
-#keystone_secure_proxy_ssl_header: X-Forwarded-For
-
 ## Service Type and Data
 keystone_service_setup: true
 keystone_service_region: RegionOne
@@ -170,6 +167,10 @@ keystone_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ inter
 #keystone_user_ssl_cert: <path to cert on ansible deployment host>
 #keystone_user_ssl_key: <path to cert on ansible deployment host>
 #keystone_user_ssl_ca_cert: <path to cert on ansible deployment host>
+
+# External SSL forwarding proto
+keystone_ssl_external: true
+keystone_secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
 
 ## Caching
 # If set this will enable dog pile cache for keystone.
