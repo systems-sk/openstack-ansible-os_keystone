@@ -113,14 +113,18 @@ keystone_service_setup: true
 keystone_service_region: RegionOne
 keystone_service_name: keystone
 keystone_service_port: 5000
-keystone_service_proto: http
-keystone_service_publicuri_proto: "{{ openstack_service_publicuri_proto | default(keystone_service_proto) }}"
-keystone_service_adminuri_proto: "{{ openstack_service_adminuri_proto | default(keystone_service_proto) }}"
-keystone_service_internaluri_proto: "{{ openstack_service_internaluri_proto | default(keystone_service_proto) }}"
 keystone_service_type: identity
 keystone_service_description: "Keystone Identity Service"
 keystone_service_user_name: keystone
 keystone_service_tenant_name: service
+
+keystone_service_proto: http
+keystone_service_publicuri_proto: "{{ openstack_service_publicuri_proto | default(keystone_service_proto) }}"
+keystone_service_adminuri_proto: "{{ openstack_service_adminuri_proto | default(keystone_service_proto) }}"
+keystone_service_internaluri_proto: "{{ openstack_service_internaluri_proto | default(keystone_service_proto) }}"
+
+keystone_service_internaluri_insecure: false
+keystone_service_adminuri_insecure: false
 
 keystone_service_publicuri: "{{ keystone_service_publicuri_proto }}://{{ external_lb_vip_address }}:{{ keystone_service_port }}"
 keystone_service_internaluri: "{{ keystone_service_internaluri_proto }}://{{ internal_lb_vip_address }}:{{ keystone_service_port }}"
@@ -138,8 +142,6 @@ keystone_service_publicurl: "{{ keystone_service_publicurl_v3 }}"
 keystone_service_internalurl: "{{ keystone_service_internalurl_v3 }}"
 keystone_service_adminurl: "{{ keystone_service_adminurl_v3 }}"
 
-keystone_service_internaluri_insecure: false
-keystone_service_adminuri_insecure: false
 
 ## Set this value to override the "public_endpoint" keystone.conf variable
 #keystone_public_endpoint: "{{ keystone_service_publicuri }}"
@@ -168,8 +170,11 @@ keystone_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ inter
 #keystone_user_ssl_key: <path to cert on ansible deployment host>
 #keystone_user_ssl_ca_cert: <path to cert on ansible deployment host>
 
+
+# Set to true when terminating SSL/TLS at a load balancer
+keystone_external_ssl: false
+
 # External SSL forwarding proto
-keystone_ssl_external: true
 keystone_secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
 
 ## Caching
