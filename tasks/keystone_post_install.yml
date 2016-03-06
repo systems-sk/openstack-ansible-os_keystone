@@ -42,13 +42,11 @@
 
 - name: Drop Keystone Configs
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "sso_callback_template.html"
+    dest: "/etc/keystone/sso_callback_template.html"
     owner: "{{ keystone_system_user_name }}"
     group: "{{ keystone_system_group_name }}"
-    mode: "{{ item.mode|default('0644') }}"
-  with_items:
-    - { src: "sso_callback_template.html", dest: "/etc/keystone/sso_callback_template.html" }
+    mode: "0644"
   notify:
     - Restart Apache
   tags:
