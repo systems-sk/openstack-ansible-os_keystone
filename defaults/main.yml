@@ -17,6 +17,17 @@
 debug: False
 verbose: True
 
+# These variables are used in 'developer mode' in order to allow the role
+# to build an environment directly from a git source without the presence
+# of an OpenStack-Ansible repo_server.
+keystone_git_repo: https://git.openstack.org/openstack/keystone
+keystone_git_install_branch: master
+keystone_requirements_git_repo: https://git.openstack.org/openstack/requirements
+keystone_requirements_git_install_branch: master
+keystone_developer_mode: false
+keystone_developer_constraints:
+  - "git+{{ keystone_git_repo }}@{{ keystone_git_install_branch }}#egg=keystone"
+
 # Name of the virtual env to deploy into
 keystone_venv_tag: untagged
 keystone_venv_bin: "/openstack/venvs/keystone-{{ keystone_venv_tag }}/bin"
@@ -347,15 +358,6 @@ keystone_sp_apt_packages:
 
 # Keystone notification settings
 keystone_ceilometer_enabled: false
-
-# These variables are used in 'developer mode' in order to allow the role
-# to build an environment directly from a git source without the presence
-# of an OpenStack-Ansible repo_server.
-keystone_git_repo: https://git.openstack.org/openstack/keystone
-keystone_git_install_branch: master
-keystone_developer_mode: false
-keystone_developer_constraints:
-  - "git+{{ keystone_git_repo }}@{{ keystone_git_install_branch }}#egg=keystone"
 
 # Keystone packages that must be installed before anything else
 keystone_requires_pip_packages:
