@@ -50,7 +50,7 @@
   roles:
     - role: "lxc_hosts"
       lxc_net_address: 10.100.100.1
-      lxc_net_dhcp_range: 10.100.100.2,10.100.100.253
+      lxc_net_dhcp_range: 10.100.100.8,10.100.100.253
       lxc_net_bridge: lxcbr0
       lxc_kernel_options:
         - { key: 'fs.inotify.max_user_instances', value: 1024 }
@@ -95,9 +95,9 @@
         physical_host: localhost
         container_name: "{{ item.name }}"
       with_items:
-        - { name: "infra1", service: "infra1", address: "10.100.100.101", groups: "all,all_containers,rabbitmq_all,galera_all,service_all" }
-        - { name: "keystone1", service: "keystone1", address: "10.100.100.102", groups: "all,all_containers,keystone_all" }
-        - { name: "keystone2", service: "keystone2", address: "10.100.100.103", groups: "all,all_containers,keystone_all" }
+        - { name: "infra1", service: "infra1", address: "10.100.100.2", groups: "all,all_containers,rabbitmq_all,galera_all,service_all" }
+        - { name: "keystone1", service: "keystone1", address: "10.100.100.3", groups: "all,all_containers,keystone_all" }
+        - { name: "keystone2", service: "keystone2", address: "10.100.100.4", groups: "all,all_containers,keystone_all" }
 
 - name: Playbook for creating containers
   hosts: all_containers
@@ -145,7 +145,7 @@
       rabbitmq_vhost:
         name: "{{ keystone_rabbitmq_vhost }}"
         state: "present"
-      delegate_to: "10.100.100.101"
+      delegate_to: "10.100.100.2"
       when: inventory_hostname == groups['keystone_all'][0]
       tags:
         - aodh-rabbitmq
@@ -159,7 +159,7 @@
         read_priv: ".*"
         write_priv: ".*"
         state: "present"
-      delegate_to: "10.100.100.101"
+      delegate_to: "10.100.100.2"
       when: inventory_hostname == groups['keystone_all'][0]
       tags:
         - aodh-rabbitmq
@@ -171,7 +171,7 @@
         login_host: "localhost"
         name: "{{ keystone_galera_database }}"
         state: "present"
-      delegate_to: "10.100.100.101"
+      delegate_to: "10.100.100.2"
       when: inventory_hostname == groups['keystone_all'][0]
       tags:
         - mysql-db-setup
@@ -188,16 +188,16 @@
       with_items:
         - "localhost"
         - "%"
-      delegate_to: "10.100.100.101"
+      delegate_to: "10.100.100.2"
       when: inventory_hostname == groups['keystone_all'][0]
       tags:
         - mysql-db-setup
   roles:
     - role: "{{ rolename | basename }}"
   vars:
-    external_lb_vip_address: 10.100.100.102
-    internal_lb_vip_address: 10.100.100.102
-    keystone_galera_address: 10.100.100.101
+    external_lb_vip_address: 10.100.100.3
+    internal_lb_vip_address: 10.100.100.3
+    keystone_galera_address: 10.100.100.2
     keystone_galera_database: keystone
     keystone_venv_tag: "testing"
     keystone_developer_mode: true
@@ -210,6 +210,6 @@
     keystone_rabbitmq_port: 5671
     keystone_rabbitmq_userid: keystone
     keystone_rabbitmq_vhost: /keystone
-    keystone_rabbitmq_servers: 10.100.100.101
+    keystone_rabbitmq_servers: 10.100.100.2
     keystone_rabbitmq_use_ssl: true
     galera_client_drop_config_file: false
