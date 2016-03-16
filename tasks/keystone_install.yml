@@ -47,11 +47,18 @@
 
 - name: Add constraints to pip_install_options fact for developer mode
   set_fact:
-    pip_install_options: "{{ pip_install_options|default('') }} --constraint /opt/developer-pip-constraints.txt --constraint /opt/requirements/upper-constraints.txt"
+    pip_install_options_fact: "{{ pip_install_options|default('') }} --constraint /opt/developer-pip-constraints.txt --constraint /opt/requirements/upper-constraints.txt"
   when:
     - keystone_developer_mode | bool
-    - "'/opt/developer-pip-constraints.txt' not in pip_install_options|default('')"
-    - "'/opt/requirements/upper-constraints.txt' not in pip_install_options|default('')"
+  tags:
+    - keystone-install
+    - keystone-pip-packages
+
+- name: Set pip_install_options_fact when not in developer mode
+  set_fact:
+    pip_install_options_fact: "{{ pip_install_options|default('') }}"
+  when:
+    - not keystone_developer_mode | bool
   tags:
     - keystone-install
     - keystone-pip-packages
@@ -60,7 +67,7 @@
   pip:
     name: "{{ item }}"
     state: present
-    extra_args: "{{ pip_install_options|default('') }}"
+    extra_args: "{{ pip_install_options_fact }}"
   register: install_packages
   until: install_packages|success
   retries: 5
@@ -178,7 +185,7 @@
     state: present
     virtualenv: "{{ keystone_venv_bin | dirname }}"
     virtualenv_site_packages: "no"
-    extra_args: "{{ pip_install_options|default('') }}"
+    extra_args: "{{ pip_install_options_fact }}"
   register: install_packages
   until: install_packages|success
   retries: 5
@@ -197,7 +204,7 @@
   pip:
     name: "{{ item }}"
     state: present
-    extra_args: "{{ pip_install_options|default('') }}"
+    extra_args: "{{ pip_install_options_fact }}"
   register: install_packages
   until: install_packages|success
   retries: 5
