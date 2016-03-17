@@ -32,7 +32,6 @@ details.
     # password used by the keystone service to interact with Galera
     keystone_container_mysql_password: "YourPassword"
 
-    keystone_auth_admin_token: "SuperSecreteTestToken"
     keystone_auth_admin_password: "SuperSecretePassword"
     keystone_service_password: "secrete"
     keystone_rabbitmq_password: "secrete"
@@ -56,7 +55,6 @@ Example Playbook
         keystone_venv_tag: "testing"
         keystone_developer_mode: true
         keystone_git_install_branch: a55128044f763f5cfe2fdc57c738eaca97636448
-        keystone_auth_admin_token: "SuperSecreteTestToken"
         keystone_auth_admin_password: "SuperSecretePassword"
         keystone_service_password: "secrete"
         keystone_rabbitmq_password: "secrete"

@@ -42,11 +42,36 @@
     - keystone-db-sync
     - keystone-setup
 
+- name: Bootstrap keystone admin and endpoint
+  command: |
+     {{ keystone_bin }}/keystone-manage bootstrap \
+     --bootstrap-username {{ keystone_admin_user_name }} \
+     --bootstrap-password {{ keystone_auth_admin_password }} \
+     --bootstrap-project-name {{ keystone_admin_tenant_name }} \
+     --bootstrap-role-name {{ keystone_role_name }} \
+     --bootstrap-service-name {{ keystone_service_name }} \
+     --bootstrap-region-id {{ keystone_service_region }} \
+     --bootstrap-admin-url {{ keystone_service_adminurl }} \
+     --bootstrap-public-url {{ keystone_service_publicurl }} \
+     --bootstrap-internal-url {{ keystone_service_internalurl }}
+  become: yes
+  become_user: "{{ keystone_system_user_name }}"
+  register: add_service
+  until: add_service|success
+  retries: 5
+  delay: 10
+  tags:
+    - keystone-api-setup
+    - keystone-service-add
+    - keystone-setup
+
 # Create a service tenant
 - name: Ensure service tenant
   keystone:
     command: "ensure_tenant"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     tenant_name: "{{ keystone_service_tenant_name }}"
     description: "{{ keystone_service_description }}"
@@ -59,82 +84,13 @@
     - keystone-api-setup
     - keystone-setup
 
-# Create an admin tenant
-- name: Ensure admin tenant
-  keystone:
-    command: "ensure_tenant"
-    token: "{{ keystone_auth_admin_token }}"
-    endpoint: "{{ keystone_service_adminurl }}"
-    tenant_name: "{{ keystone_admin_tenant_name }}"
-    description: "{{ keystone_admin_description }}"
-    insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_service
-  until: add_service|success
-  retries: 5
-  delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-setup
-
-# Create an admin user
-- name: Ensure Admin user
-  keystone:
-    command: "ensure_user"
-    token: "{{ keystone_auth_admin_token }}"
-    endpoint: "{{ keystone_service_adminurl }}"
-    user_name: "{{ keystone_admin_user_name }}"
-    tenant_name: "{{ keystone_admin_tenant_name }}"
-    password: "{{ keystone_auth_admin_password }}"
-    insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_service
-  when: not keystone_service_in_ldap | bool
-  until: add_service|success
-  retries: 5
-  delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-setup
-
-# Create an admin role
-- name: Ensure Admin role
-  keystone:
-    command: "ensure_role"
-    token: "{{ keystone_auth_admin_token }}"
-    endpoint: "{{ keystone_service_adminurl }}"
-    role_name: "{{ keystone_role_name }}"
-    insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_service
-  until: add_service|success
-  retries: 5
-  delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-setup
-
-# Add a role to the user
-- name: Ensure Admin user to Admin role
-  keystone:
-    command: "ensure_user_role"
-    token: "{{ keystone_auth_admin_token }}"
-    endpoint: "{{ keystone_service_adminurl }}"
-    user_name: "{{ keystone_admin_user_name }}"
-    tenant_name: "{{ keystone_admin_tenant_name }}"
-    role_name: "{{ keystone_role_name }}"
-    insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_service
-  when: not keystone_service_in_ldap | bool
-  until: add_service|success
-  retries: 5
-  delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-setup
-
 # Add the default user role
 - name: Ensure default keystone user role
   keystone:
     command: "ensure_role"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     role_name: "{{ keystone_default_role_name }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
@@ -151,7 +107,9 @@
 - name: Ensure Keystone Service
   keystone:
     command: "ensure_service"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     service_name: "{{ keystone_service_name }}"
     service_type: "{{ keystone_service_type }}"
@@ -170,7 +128,9 @@
 - name: Ensure Keystone user
   keystone:
     command: "ensure_user"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     user_name: "{{ keystone_service_user_name }}"
     tenant_name: "{{ keystone_service_tenant_name }}"
@@ -189,38 +149,14 @@
 - name: Ensure Keystone user to Admin role
   keystone:
     command: "ensure_user_role"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     user_name: "{{ keystone_service_user_name }}"
     tenant_name: "{{ keystone_service_tenant_name }}"
     role_name: "{{ keystone_role_name }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_service
-  until: add_service|success
-  retries: 5
-  delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-service-add
-    - keystone-setup
-
-# Create an endpoint
-- name: Ensure Keystone Endpoint
-  keystone:
-    command: "ensure_endpoint"
-    token: "{{ keystone_auth_admin_token }}"
-    endpoint: "{{ keystone_service_adminurl }}"
-    region_name: "{{ keystone_service_region }}"
-    service_name: "{{ keystone_service_name }}"
-    service_type: "{{ keystone_service_type }}"
-    insecure: "{{ keystone_service_adminuri_insecure }}"
-    endpoint_list:
-      - url: "{{ keystone_service_publicurl }}"
-        interface: "public"
-      - url: "{{ keystone_service_adminurl }}"
-        interface: "admin"
-      - url: "{{ keystone_service_internalurl }}"
-        interface: "internal"
   register: add_service
   until: add_service|success
   retries: 5

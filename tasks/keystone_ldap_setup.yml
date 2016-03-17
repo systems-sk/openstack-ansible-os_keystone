@@ -18,7 +18,9 @@
   keystone:
     command: ensure_domain
     domain_name: "{{ item.key }}"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   with_dict: keystone_ldap

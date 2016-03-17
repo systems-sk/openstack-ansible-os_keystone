@@ -191,9 +191,8 @@
     keystone_galera_database: keystone
     keystone_venv_tag: "testing"
     keystone_developer_mode: true
-    keystone_git_install_branch: a55128044f763f5cfe2fdc57c738eaca97636448
-    keystone_requirements_git_install_branch: 332278d456e06870150835564342570ec9d5f5a0
-    keystone_auth_admin_token: "SuperSecreteTestToken"
+    keystone_git_install_branch: 9692d40a78651f59db679def493f9712c96e0596 # HEAD of "stable/mitaka" as of 16.03.2016
+    keystone_requirements_git_install_branch: 983af4a5d05bfa0f2c1d4ec80e3ee44a5abc2752 # HEAD of "master" as of 16.03.2016
     keystone_auth_admin_password: "SuperSecretePassword"
     keystone_service_password: "secrete"
     keystone_rabbitmq_password: "secrete"
