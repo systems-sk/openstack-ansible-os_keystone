@@ -202,6 +202,11 @@
       when: inventory_hostname == groups['keystone_all'][0]
   roles:
     - role: "{{ rolename | basename }}"
+  tasks:
+    # needed by the functional test playbook below
+    - name: Install httplib2 so we can use the uri module
+      pip:
+        name: httplib2
   vars:
     external_lb_vip_address: 10.100.100.3
     internal_lb_vip_address: 10.100.100.3
@@ -222,3 +227,49 @@
     keystone_rabbitmq_servers: 10.100.100.2
     keystone_rabbitmq_use_ssl: true
     galera_client_drop_config_file: false
+
+- name: Playbook for functional testing keystone
+  hosts: keystone_all
+  user: root
+  gather_facts: false
+  tasks:
+    - name: Check the keystone api
+      uri:
+        url: "http://localhost:{{ item }}"
+        status_code: 300
+      register: result
+      until: result.status == 300
+      retries: 5
+      delay: 10
+      with_items:
+        - 5000
+        - 35357
+    - name: Check for expected users
+      keystone:
+        command: get_user
+        user_name: "{{ item }}"
+        endpoint: "{{ keystone_service_adminurl }}"
+        login_user: "{{ keystone_admin_user_name }}"
+        login_password: "{{ keystone_auth_admin_password }}"
+        login_project_name: "{{ keystone_admin_tenant_name }}"
+      with_items:
+        - "admin"
+        - "keystone"
+    - name: Check for expected projects
+      keystone:
+        command: get_project
+        project_name: "{{ item }}"
+        endpoint: "{{ keystone_service_adminurl }}"
+        login_user: "{{ keystone_admin_user_name }}"
+        login_password: "{{ keystone_auth_admin_password }}"
+        login_project_name: "{{ keystone_admin_tenant_name }}"
+      with_items:
+        - "admin"
+        - "service"
+  vars:
+    keystone_admin_user_name: admin
+    keystone_auth_admin_password: "SuperSecretePassword"
+    keystone_admin_tenant_name: admin
+    internal_lb_vip_address: 10.100.100.3
+    keystone_service_adminuri: "http://{{ internal_lb_vip_address }}:35357"
+    keystone_service_adminurl: "{{ keystone_service_adminuri }}/v3"
