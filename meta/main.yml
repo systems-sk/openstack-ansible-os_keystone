@@ -30,7 +30,9 @@ galaxy_info:
     - development
     - openstack
 dependencies:
-  - apt_package_pinning
+  - role: apt_package_pinning
+    when:
+      - ansible_pkg_mgr == 'apt'
   - role: galera_client
     when:
       - keystone_database_enabled | bool
