@@ -11,7 +11,6 @@
     keystone_galera_database: keystone
     keystone_venv_tag: "testing"
     keystone_developer_mode: true
-    keystone_auth_admin_token: "SuperSecreteTestToken"
     keystone_auth_admin_password: "SuperSecretePassword"
     keystone_database_enabled: false
     keystone_service_setup: false

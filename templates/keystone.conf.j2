@@ -3,7 +3,6 @@
 [DEFAULT]
 verbose = {{ verbose }}
 debug = {{ debug }}
-admin_token = {{ keystone_auth_admin_token }}
 {% if keystone_public_endpoint is defined %}
 public_endpoint = {{ keystone_public_endpoint }}
 {% endif %}

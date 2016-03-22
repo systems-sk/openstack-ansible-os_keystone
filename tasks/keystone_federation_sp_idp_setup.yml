@@ -28,7 +28,9 @@
   keystone:
     command: ensure_domain
     domain_name: "{{ item.domain }}"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.domain is defined
@@ -41,7 +43,9 @@
     command: ensure_project
     project_name: "{{ item.project }}"
     domain_name: "{{ item.domain | default('Default') }}"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.project is defined
@@ -56,7 +60,9 @@
     password: "{{ item.password }}"
     project_name: "{{ item.project }}"
     domain_name: "{{ item.domain | default('Default') }}"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: >
@@ -72,7 +78,9 @@
     command: ensure_group
     group_name: "{{ item.group }}"
     domain_name: "{{ item.domain | default('Default') }}"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.group is defined
@@ -84,7 +92,9 @@
   keystone:
     command: "ensure_role"
     role_name: "{{ item.role | default('_member_') }}"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: >
@@ -100,7 +110,9 @@
     group_name: "{{ item.group }}"
     project_name: "{{ item.project }}"
     role_name: "{{ item.role | default('_member_') }}"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: >
@@ -115,7 +127,9 @@
     command: ensure_mapping
     mapping_name: "{{ item.protocol.mapping.name }}"
     mapping_rules: "{{ item.protocol.mapping.rules }}"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.protocol.mapping.name is defined
@@ -129,7 +143,9 @@
     idp_name: "{{ item.name }}"
     idp_remote_ids: "{{ item.entity_ids }}"
     idp_enabled: true
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.name is defined
@@ -143,7 +159,9 @@
     protocol_name: "{{ item.protocol.name }}"
     idp_name: "{{ item.idp.name }}"
     mapping_name: "{{ item.protocol.mapping.name }}"
-    token: "{{ keystone_auth_admin_token }}"
+    login_user: "{{ keystone_admin_user_name }}"
+    login_password: "{{ keystone_auth_admin_password }}"
+    login_project_name: "{{ keystone_admin_tenant_name }}"
     endpoint: "{{ keystone_service_adminurl }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.protocol.name is defined
