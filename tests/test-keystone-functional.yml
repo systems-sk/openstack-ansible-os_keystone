@@ -1,0 +1,55 @@
+---
+# Copyright 2015, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Playbook for functional testing keystone
+  hosts: keystone_all
+  user: root
+  gather_facts: false
+  tasks:
+    - name: Check the keystone api
+      uri:
+        url: "http://localhost:{{ item }}"
+        status_code: 300
+      register: result
+      until: result.status == 300
+      retries: 5
+      delay: 10
+      with_items:
+        - 5000
+        - 35357
+    - name: Check for expected users
+      keystone:
+        command: get_user
+        user_name: "{{ item }}"
+        endpoint: "{{ keystone_service_adminurl }}"
+        login_user: "{{ keystone_admin_user_name }}"
+        login_password: "{{ keystone_auth_admin_password }}"
+        login_project_name: "{{ keystone_admin_tenant_name }}"
+      with_items:
+        - "admin"
+        - "keystone"
+    - name: Check for expected projects
+      keystone:
+        command: get_project
+        project_name: "{{ item }}"
+        endpoint: "{{ keystone_service_adminurl }}"
+        login_user: "{{ keystone_admin_user_name }}"
+        login_password: "{{ keystone_auth_admin_password }}"
+        login_project_name: "{{ keystone_admin_tenant_name }}"
+      with_items:
+        - "admin"
+        - "service"
+  vars_files:
+    - test-vars.yml
