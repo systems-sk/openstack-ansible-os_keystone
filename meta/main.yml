@@ -30,15 +30,18 @@ galaxy_info:
     - development
     - openstack
 dependencies:
+  - role: pip_lock_down
+    when:
+      - not keystone_developer_mode | bool
+  - role: pip_install
+    when:
+      - keystone_developer_mode | bool
   - role: apt_package_pinning
     when:
       - ansible_pkg_mgr == 'apt'
   - role: galera_client
     when:
       - keystone_database_enabled | bool
-  - role: pip_lock_down
-    when:
-      - not keystone_developer_mode | bool
   - role: memcached_server
     when:
       - "'memcache' in keystone_token_driver"
