@@ -68,7 +68,6 @@
 
 - include: keystone_federation_sp_idp_setup.yml
   when:
-  when:
     - keystone_service_setup | bool
     - keystone_sp is defined
     - inventory_hostname == groups['keystone_all'][0]
