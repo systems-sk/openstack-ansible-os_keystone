@@ -54,7 +54,7 @@ Example Playbook
         keystone_galera_database: keystone
         keystone_venv_tag: "testing"
         keystone_developer_mode: true
-        keystone_git_install_branch: stable/mitaka
+        keystone_git_install_branch: master
         keystone_auth_admin_password: "SuperSecretePassword"
         keystone_service_password: "secrete"
         keystone_rabbitmq_password: "secrete"
