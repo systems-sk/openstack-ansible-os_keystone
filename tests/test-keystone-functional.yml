@@ -51,5 +51,22 @@
       with_items:
         - "admin"
         - "service"
+    - name: Get SSL cert location and permissions
+      stat:
+        path: "/etc/ssl/certs/keystone.pem"
+      register: keystone_ssl_cert_stats
+    - name: Check SSL cert location and permissions
+      fail:
+        msg: "Keystone SSL cert permissions don't match 0640"
+      when: keystone_ssl_cert_stats.stat.mode != "0640"
+    - name: Get SSL key location and permissions
+      stat:
+        path: "/etc/ssl/private/keystone.key"
+      register: keystone_ssl_key_stats
+    - name: Check SSL key location and permissions
+      fail:
+        msg: "Keystone SSL key permissions don't match 0640"
+      when: keystone_ssl_key_stats.stat.mode != "0640"
+
   vars_files:
     - test-vars.yml
