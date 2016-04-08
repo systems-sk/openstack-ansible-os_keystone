@@ -28,6 +28,7 @@ keystone_rabbitmq_password: "secrete"
 keystone_rabbitmq_port: 5671
 keystone_rabbitmq_servers: 10.100.100.2
 keystone_rabbitmq_use_ssl: true
+keystone_ssl: true
 keystone_rabbitmq_userid: keystone
 keystone_rabbitmq_vhost: /keystone
 keystone_requirements_git_install_branch: master

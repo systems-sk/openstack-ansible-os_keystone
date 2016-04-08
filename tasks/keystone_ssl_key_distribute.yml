@@ -13,23 +13,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Distribute self signed cert and key
-  memcached:
-    name: "{{ item.name }}"
-    file_path: "{{ item.src }}"
-    state: "retrieve"
-    file_mode: "{{ item.file_mode }}"
-    dir_mode: "{{ item.dir_mode }}"
-    server: "{{ memcached_servers }}"
-    encrypt_string: "{{ memcached_encryption_key }}"
-  with_items:
-    - { src: "{{ keystone_ssl_cert }}", name: "keystone_ssl_cert", file_mode: "0644", dir_mode: "0755" }
-    - { src: "{{ keystone_ssl_key }}", name: "keystone_ssl_key", file_mode: "0640", dir_mode: "0750" }
-  register: memcache_keys
-  until: memcache_keys|success
-  retries: 5
-  delay: 2
-  notify: Restart Apache
+- name: Distribute self signed ssl key
+  copy:
+    dest: "{{ keystone_ssl_key }}"
+    content: "{{ hostvars[groups['keystone_all'][0]]['keystone_ssl_key_fact'] | b64decode }}"
+    owner: "{{ keystone_system_user_name }}"
+    group: "{{ keystone_system_group_name }}"
+    mode: "0640"
   tags:
-    - keystone-config
+    - keystone-ssl
+
+- name: Distribute self signed ssl cert
+  copy:
+    dest: "{{ keystone_ssl_cert }}"
+    content: "{{ hostvars[groups['keystone_all'][0]]['keystone_ssl_cert_fact'] | b64decode }}"
+    owner: "{{ keystone_system_user_name }}"
+    group: "{{ keystone_system_group_name }}"
+    mode: "0640"
+  tags:
+    - keystone-ssl
+
+- name: Ensure keystone user owns the self-signed key and certificate
+  file:
+    path: "{{ item }}"
+    owner: "{{ keystone_system_user_name }}"
+    group: "{{ keystone_system_group_name }}"
+  with_items:
+    - "{{ keystone_ssl_key }}"
+    - "{{ keystone_ssl_cert }}"
+  tags:
     - keystone-ssl
