@@ -34,3 +34,16 @@
   tags:
     - keystone-configs
     - keystone-ssl
+
+- name: Ensure keystone user owns the self-signed key and certificate
+  file:
+    path: "{{ item }}"
+    owner: "{{ keystone_system_user_name }}"
+    group: "{{ keystone_system_group_name }}"
+    mode: "0640"
+  with_items:
+    - "{{ keystone_ssl_key }}"
+    - "{{ keystone_ssl_cert }}"
+  notify: Restart Apache
+  tags:
+    - keystone-ssl
