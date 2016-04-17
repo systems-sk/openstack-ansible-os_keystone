@@ -49,7 +49,7 @@
 - name: Ensure Apache ServerName
   lineinfile:
     dest: "/etc/apache2/apache2.conf"
-    line: "ServerName {{ inventory_hostname }}"
+    line: "ServerName {{ ansible_hostname }}"
   notify:
     - Restart Apache
   tags:
