@@ -390,3 +390,9 @@ keystone_keystone_conf_overrides: {}
 keystone_keystone_default_conf_overrides: {}
 keystone_keystone_paste_ini_overrides: {}
 keystone_policy_overrides: {}
+
+keystone_required_secrets:
+  - keystone_auth_admin_password
+  - keystone_container_mysql_password
+  - keystone_rabbitmq_password
+  - keystone_service_password
