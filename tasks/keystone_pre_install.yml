@@ -24,7 +24,7 @@
     name: "{{ item }}"
     state: "present"
     system: "yes"
-  with_items: keystone_system_additional_groups
+  with_items: "{{ keystone_system_additional_groups }}"
 
 - name: Remove old key file(s) if found
   file:

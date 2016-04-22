@@ -31,7 +31,7 @@
     SSLOptions +StdEnvVars +ExportCertData
     {% endif %}
 
-    {% if keystone_sp is defined -%}
+    {% if keystone_sp != {} -%}
     ShibURLScheme {{ keystone_service_publicuri_proto }}
 
     <Location /Shibboleth.sso>

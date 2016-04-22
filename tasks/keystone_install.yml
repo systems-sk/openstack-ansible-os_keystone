@@ -58,7 +58,7 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: keystone_requires_pip_packages
+  with_items: "{{ keystone_requires_pip_packages }}"
 
 - name: Get local venv checksum
   stat:
@@ -134,7 +134,7 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: keystone_pip_packages
+  with_items: "{{ keystone_pip_packages }}"
   when:
     - keystone_get_venv | failed or keystone_developer_mode | bool
   notify:

@@ -45,7 +45,7 @@ cache_time = {{ keystone_revocation_cache_time }}
 
 
 [auth]
-{% if keystone_sp is defined %}
+{% if keystone_sp != {} %}
 methods = {{ keystone_auth_methods }},saml2
 saml2 = keystone.auth.plugins.mapped.Mapped
 {% else %}
@@ -106,7 +106,7 @@ driver = {{ keystone_token_driver }}
 [catalog]
 caching = false
 
-{% if keystone_idp is defined %}
+{% if keystone_idp != {} %}
 [saml]
 certfile = "{{ keystone_idp.certfile }}"
 keyfile = "{{ keystone_idp.keyfile }}"
@@ -157,7 +157,7 @@ rabbit_hosts = {{ keystone_rabbitmq_servers }}
 rabbit_use_ssl = {{ keystone_rabbitmq_use_ssl }}
 {% endif %}
 
-{% if keystone_sp is defined %}
+{% if keystone_sp != {} %}
 [federation]
 remote_id_attribute = Shib-Identity-Provider
 {% if keystone_sp.trusted_dashboard_list is defined %}

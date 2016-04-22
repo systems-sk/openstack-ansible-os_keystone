@@ -227,6 +227,7 @@ keystone_recreate_keys: False
 ## Federation
 
 # Enable the following section on the Keystone IdP
+keystone_idp: {}
 #keystone_idp:
 #  certfile: "/etc/keystone/ssl/idp_signing_cert.pem"
 #  keyfile: "/etc/keystone/ssl/idp_signing_key.pem"
@@ -253,6 +254,7 @@ keystone_recreate_keys: False
 # Enable the following section in order to install and configure
 # Keystone as a Resource Service Provider (SP) and to configure
 # trusts with specific Identity Providers (IdP).
+keystone_sp: {}
 #keystone_sp:
 #  cert_duration_years: 5
 #  trusted_dashboard_list:
