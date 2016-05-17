@@ -1,7 +1,6 @@
 # {{ ansible_managed }}
 
 [DEFAULT]
-verbose = {{ verbose }}
 debug = {{ debug }}
 {% if keystone_public_endpoint is defined %}
 public_endpoint = {{ keystone_public_endpoint }}

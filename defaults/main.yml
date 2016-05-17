@@ -15,7 +15,6 @@
 
 ## Verbosity Options
 debug: False
-verbose: True
 
 # These variables are used in 'developer mode' in order to allow the role
 # to build an environment directly from a git source without the presence
