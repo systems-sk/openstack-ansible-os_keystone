@@ -24,7 +24,7 @@
     dest: "{{ keystone_fernet_auto_rotation_script }}"
     owner: "{{ keystone_system_user_name }}"
     group: "{{ keystone_system_group_name }}"
-    mode: "1755"
+    mode: "0755"
   tags:
     - keystone-fernet-auto-rotate
 
