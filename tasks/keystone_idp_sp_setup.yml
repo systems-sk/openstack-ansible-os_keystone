@@ -28,5 +28,3 @@
   until: add_service_providers|success
   retries: 5
   delay: 10
-  tags:
-    - keystone-idp

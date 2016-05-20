@@ -21,6 +21,3 @@
   when: keystone_idp is defined
   notify:
     - Restart Apache
-  tags:
-    - keystone-config
-    - keystone-idp

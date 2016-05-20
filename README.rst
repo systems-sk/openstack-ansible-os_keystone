@@ -65,3 +65,13 @@ Example Playbook
         keystone_rabbitmq_servers: 10.100.100.101
         keystone_rabbitmq_use_ssl: true
         galera_client_drop_config_file: false
+
+Tags
+====
+
+This role supports two tags: ``keystone-install`` and ``keystone-config``
+
+The ``keystone-install`` tag can be used to install and upgrade.
+
+The ``keystone-config`` tag can be used to maintain configuration of the
+service.

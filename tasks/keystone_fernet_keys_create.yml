@@ -17,8 +17,6 @@
   stat:
     path: "{{ keystone_fernet_tokens_key_repository }}/0"
   register: _fernet_keys
-  tags:
-    - keystone-fernet
 
 - name: Create fernet keys for Keystone
   command: >
@@ -28,10 +26,6 @@
   become: yes
   become_user: "{{ keystone_system_user_name }}"
   when: not _fernet_keys.stat.exists
-  tags:
-    - keystone-setup
-    - keystone-fernet
-    - keystone-command-bin
 
 - name: Rotate fernet keys for Keystone
   command: >
@@ -41,6 +35,3 @@
   become: yes
   become_user: "{{ keystone_system_user_name }}"
   when: _fernet_keys.stat.exists
-  tags:
-    - keystone-fernet
-    - keystone-command-bin

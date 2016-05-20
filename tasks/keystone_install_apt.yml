@@ -21,8 +21,6 @@
   until: apt_update|success
   retries: 5
   delay: 2
-  tags:
-    - keystone-apt-packages
 
 - name: Install apt packages
   apt:
@@ -33,9 +31,6 @@
   retries: 5
   delay: 2
   with_items: keystone_apt_packages
-  tags:
-    - keystone-install
-    - keystone-apt-packages
 
 - name: Install IdP apt packages
   apt:
@@ -47,9 +42,6 @@
   delay: 2
   with_items: keystone_idp_apt_packages
   when: keystone_idp is defined
-  tags:
-    - keystone-install
-    - keystone-apt-packages
 
 - name: Install SP apt packages
   apt:
@@ -61,9 +53,6 @@
   delay: 2
   with_items: keystone_sp_apt_packages
   when: keystone_sp is defined
-  tags:
-    - keystone-install
-    - keystone-apt-packages
 
 - name: Install developer mode apt packages
   apt:
@@ -76,6 +65,3 @@
   with_items: keystone_developer_apt_packages
   when:
     - keystone_developer_mode | bool
-  tags:
-    - keystone-install
-    - keystone-apt-packages

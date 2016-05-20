@@ -25,9 +25,6 @@
     - { src: "shibboleth2.xml.j2", dest: "/etc/shibboleth/shibboleth2.xml" }
   notify:
     - Restart Shibd
-  tags:
-    - keystone-config
-    - keystone-federation-sp
 
 - name: Generate the Shibboleth SP key-pair
   shell: "shib-keygen -h {{ external_lb_vip_address }} -y {{ keystone_sp.cert_duration_years }}"
@@ -37,9 +34,6 @@
   notify:
     - Restart Apache
     - Restart Shibd
-  tags:
-    - keystone-config
-    - keystone-federation-sp
 
 - name: Store Shibboleth SP key-pair
   memcached:
@@ -56,9 +50,6 @@
   retries: 5
   delay: 2
   when: inventory_hostname == groups['keystone_all'][0]
-  tags:
-    - keystone-config
-    - keystone-federation-sp
 
 - name: Distribute the Shibboleth SP key-pair
   memcached:
@@ -80,9 +71,6 @@
   notify:
     - Restart Apache
     - Restart Shibd
-  tags:
-    - keystone-config
-    - keystone-federation-sp
 
 - name: Set appropriate file ownership on the Shibboleth SP key-pair
   file:
@@ -96,6 +84,3 @@
   notify:
     - Restart Apache
     - Restart Shibd
-  tags:
-    - keystone-config
-    - keystone-federation-sp

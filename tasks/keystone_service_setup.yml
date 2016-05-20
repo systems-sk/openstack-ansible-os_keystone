@@ -18,9 +18,6 @@
     name: "{{ keystone_system_service_name }}"
     state: restarted
     pattern: "{{ keystone_system_service_name }}"
-  tags:
-    - keystone-db-sync
-    - keystone-setup
 
 - name: Wait for keystone admin to come up
   wait_for:
@@ -28,9 +25,6 @@
     port: "{{ keystone_admin_port }}"
     timeout: 25
     delay: 10
-  tags:
-    - keystone-db-sync
-    - keystone-setup
 
 - name: Wait for keystone service to come up
   wait_for:
@@ -38,9 +32,6 @@
     port: "{{ keystone_service_port }}"
     timeout: 25
     delay: 10
-  tags:
-    - keystone-db-sync
-    - keystone-setup
 
 - name: Bootstrap keystone admin and endpoint
   command: |
@@ -60,10 +51,6 @@
   until: add_service|success
   retries: 5
   delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-service-add
-    - keystone-setup
 
 # Create a service tenant
 - name: Ensure service tenant
@@ -80,9 +67,6 @@
   until: add_service|success
   retries: 5
   delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-setup
 
 # Add the default user role
 - name: Ensure default keystone user role
@@ -99,9 +83,6 @@
   until: add_member_role|success
   retries: 5
   delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-setup
 
 # Create a service
 - name: Ensure Keystone Service
@@ -119,10 +100,6 @@
   until: add_service|success
   retries: 5
   delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-service-add
-    - keystone-setup
 
 # Create a service user
 - name: Ensure Keystone user
@@ -140,10 +117,6 @@
   until: add_service|success
   retries: 5
   delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-service-add
-    - keystone-setup
 
 # Add a role to the user
 - name: Ensure Keystone user to Admin role
@@ -161,7 +134,3 @@
   until: add_service|success
   retries: 5
   delay: 10
-  tags:
-    - keystone-api-setup
-    - keystone-service-add
-    - keystone-setup

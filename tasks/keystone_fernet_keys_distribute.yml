@@ -23,5 +23,3 @@
   become: yes
   become_user: "{{ keystone_system_user_name }}"
   with_items: groups['keystone_all'][1:]
-  tags:
-    - keystone-fernet-distribute

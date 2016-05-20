@@ -25,8 +25,6 @@
     - { src: "keystone-httpd-mpm.conf.j2", dest: "/etc/apache2/mods-available/mpm_{{ keystone_httpd_mpm_backend }}.conf" }
   notify:
     - Restart Apache
-  tags:
-    - keystone-httpd
 
 - name: Disable default apache site
   file:
@@ -34,8 +32,6 @@
     state: "absent"
   notify:
     - Restart Apache
-  tags:
-    - keystone-httpd
 
 - name: Enabled keystone vhost
   file:
@@ -44,8 +40,6 @@
     state: "link"
   notify:
     - Restart Apache
-  tags:
-    - keystone-httpd
 
 - name: Ensure Apache ServerName
   lineinfile:
@@ -53,8 +47,6 @@
     line: "ServerName {{ ansible_hostname }}"
   notify:
     - Restart Apache
-  tags:
-    - keystone-httpd
 
 - name: Ensure Apache ServerTokens
   lineinfile:
@@ -63,8 +55,6 @@
     line: "ServerTokens {{ keystone_apache_servertokens }}"
   notify:
     - Restart Apache
-  tags:
-    - keystone-httpd
 
 - name: Ensure Apache ServerSignature
   lineinfile:
@@ -73,8 +63,6 @@
     line: "ServerSignature {{ keystone_apache_serversignature }}"
   notify:
     - Restart Apache
-  tags:
-    - keystone-httpd
 
 - name: Enable/disable mod_ssl for apache2
   apache2_module:
@@ -82,9 +70,6 @@
     state: "{{ (keystone_ssl | bool) | ternary('present', 'absent') }}"
   notify:
     - Restart Apache
-  tags:
-    - keystone-httpd
-    - keystone-ssl
 
 - name: Enable/disable mod_shib2 for apache2
   apache2_module:
@@ -93,5 +78,3 @@
   ignore_errors: yes
   notify:
     - Restart Apache
-  tags:
-    - keystone-httpd
