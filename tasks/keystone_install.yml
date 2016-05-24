@@ -63,7 +63,7 @@
     - keystone-install
     - keystone-pip-packages
 
-- name: Install requires pip packages
+- name: Install required pip packages
   pip:
     name: "{{ item }}"
     state: latest
