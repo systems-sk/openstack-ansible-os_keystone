@@ -20,6 +20,9 @@ debug: False
 # Options are 'present' and 'latest'
 keystone_package_state: "latest"
 
+# Role standard API override this option in the OS variable files
+keystone_shibboleth_repo: {}
+
 # These variables are used in 'developer mode' in order to allow the role
 # to build an environment directly from a git source without the presence
 # of an OpenStack-Ansible repo_server.
@@ -44,7 +47,7 @@ keystone_system_user_name: keystone
 keystone_system_group_name: keystone
 keystone_system_additional_groups:
   - ssl_cert
-keystone_system_service_name: apache2
+
 keystone_system_shell: /bin/bash
 keystone_system_comment: keystone system user
 keystone_system_user_home: "/var/lib/{{ keystone_system_user_name }}"
@@ -380,10 +383,6 @@ keystone_sp: {}
 #              id: upn
 
 keystone_service_in_ldap: false
-
-# Keystone Federation SP Packages
-keystone_sp_apt_packages:
-  - libapache2-mod-shib2
 
 # Keystone notification settings
 keystone_ceilometer_enabled: false

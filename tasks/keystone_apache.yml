@@ -13,68 +13,89 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Create apache nogroup group
+  group:
+    name: "nogroup"
+    system: "yes"
+
+- name: Create apache nogroup user
+  user:
+    name: "nogroup"
+    group: "nogroup"
+    system: "yes"
+    shell: "/bin/false"
+
 - name: Drop apache2 config files
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "root"
     group: "root"
-  with_items:
-    - { src: "keystone-ports.conf.j2", dest: "/etc/apache2/ports.conf" }
-    - { src: "keystone-httpd.conf.j2", dest: "/etc/apache2/sites-available/keystone-httpd.conf" }
-    - { src: "keystone-httpd-mpm.conf.j2", dest: "/etc/apache2/mods-available/mpm_{{ keystone_httpd_mpm_backend }}.conf" }
+  with_items: "{{ keystone_apache_configs }}"
   notify:
-    - Restart Apache
+    - Restart service
 
 - name: Disable default apache site
   file:
-    path: "/etc/apache2/sites-enabled/000-default.conf"
+    path: "{{ item }}"
     state: "absent"
+  with_items: "{{ keystone_apache_default_sites }}"
   notify:
-    - Restart Apache
+    - Restart service
 
 - name: Enabled keystone vhost
   file:
-    src: "/etc/apache2/sites-available/keystone-httpd.conf"
-    dest: "/etc/apache2/sites-enabled/keystone-httpd.conf"
+    src: "{{ keystone_apache_site_available }}"
+    dest: "{{ keystone_apache_site_enabled }}"
     state: "link"
+  when:
+    - keystone_apache_site_available is defined
+    - keystone_apache_site_enabled is defined
   notify:
-    - Restart Apache
+    - Restart service
 
 - name: Ensure Apache ServerName
   lineinfile:
-    dest: "/etc/apache2/apache2.conf"
+    dest: "{{ keystone_apache_conf }}"
     line: "ServerName {{ ansible_hostname }}"
   notify:
-    - Restart Apache
+    - Restart service
 
 - name: Ensure Apache ServerTokens
   lineinfile:
-    dest: "/etc/apache2/conf-available/security.conf"
+    dest: "{{ keystone_apache_security_conf }}"
     regexp: '^ServerTokens'
     line: "ServerTokens {{ keystone_apache_servertokens }}"
   notify:
-    - Restart Apache
+    - Restart service
 
 - name: Ensure Apache ServerSignature
   lineinfile:
-    dest: "/etc/apache2/conf-available/security.conf"
+    dest: "{{ keystone_apache_security_conf }}"
     regexp: '^ServerSignature'
     line: "ServerSignature {{ keystone_apache_serversignature }}"
   notify:
-    - Restart Apache
+    - Restart service
 
+## NOTE(cloudnull):
+## Module enable/disable process is only functional on Debian based systems.
 - name: Enable/disable mod_ssl for apache2
   apache2_module:
     name: ssl
     state: "{{ (keystone_ssl | bool) | ternary('present', 'absent') }}"
+  when:
+    - ansible_pkg_mgr == 'apt'
   notify:
-    - Restart Apache
+    - Restart service
 
+## NOTE(cloudnull):
+## Module enable/disable process is only functional on Debian based systems.
 - name: Enable/disable mod_shib2 for apache2
   apache2_module:
     name: shib2
     state: "{{ ( keystone_sp != {} ) | ternary('present', 'absent') }}"
   ignore_errors: yes
+  when:
+    - ansible_pkg_mgr == 'apt'
   notify:
-    - Restart Apache
+    - Restart service

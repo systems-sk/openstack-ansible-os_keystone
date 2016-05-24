@@ -14,7 +14,8 @@
 # limitations under the License.
 
 # Common apt packages
-keystone_apt_packages:
+# The old name has been deprecated, remove the variables with the deprecation filers and change the package variable names.
+_keystone_packages:
   - debhelper
   - dh-apparmor
   - docutils-common
@@ -30,14 +31,43 @@ keystone_apt_packages:
   - python-dev
   - rsync
 
-keystone_idp_apt_packages:
-  - ssl-cert
-  - xmlsec1
+keystone_packages: '{{ _keystone_packages | deprecated(keystone_apt_packages, "keystone_apt_packages", "keystone_packages", "ocata", keystone_fatal_deprecations) }}'
 
-keystone_developer_apt_packages:
-  - build-essential
-
-keystone_apache_apt_packages:
+keystone_apache_packages:
   - apache2
   - apache2-utils
   - libapache2-mod-wsgi
+
+# The old name has been deprecated, remove the variables with the deprecation filers and change the package variable names.
+_keystone_idp_packages:
+  - ssl-cert
+  - xmlsec1
+
+keystone_idp_packages: '{{ _keystone_idp_packages | deprecated(keystone_idp_apt_packages, "keystone_idp_apt_packages", "keystone_idp_packages", "ocata", keystone_fatal_deprecations) }}'
+
+# The old name has been deprecated, remove the variables with the deprecation filers and change the package variable names.
+_keystone_sp_packages:
+  - libapache2-mod-shib2
+
+keystone_sp_packages: '{{ _keystone_sp_packages | deprecated(keystone_sp_apt_packages, "keystone_sp_apt_packages", "keystone_sp_packages", "ocata", keystone_fatal_deprecations) }}'
+
+# The old name has been deprecated, remove the variables with the deprecation filers and change the package variable names.
+_keystone_developer_packages:
+  - build-essential
+
+keystone_developer_packages: '{{ _keystone_developer_packages | deprecated(keystone_developer_apt_packages, "keystone_developer_apt_packages", "keystone_developer_packages", "ocata", keystone_fatal_deprecations) }}'
+
+keystone_apache_default_sites:
+  - "/etc/apache2/sites-enabled/000-default.conf"
+
+keystone_apache_site_available: "/etc/apache2/sites-available/keystone-httpd.conf"
+keystone_apache_site_enabled: "/etc/apache2/sites-enabled/keystone-httpd.conf"
+keystone_apache_conf: "/etc/apache2/apache2.conf"
+keystone_apache_security_conf: "/etc/apache2/conf-available/security.conf"
+
+keystone_apache_configs:
+  - { src: "keystone-ports.conf.j2", dest: "/etc/apache2/ports.conf" }
+  - { src: "keystone-httpd.conf.j2", dest: "/etc/apache2/sites-available/keystone-httpd.conf" }
+  - { src: "keystone-httpd-mpm.conf.j2", dest: "/etc/apache2/mods-available/mpm_{{ keystone_httpd_mpm_backend }}.conf" }
+
+keystone_system_service_name: apache2

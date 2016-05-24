@@ -30,7 +30,7 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: "{{ keystone_apt_packages }}"
+  with_items: "{{ keystone_packages }}"
 
 - name: Install Apache apt packages
   apt:
@@ -40,7 +40,7 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: "{{ keystone_apache_apt_packages }}"
+  with_items: "{{ keystone_apache_packages }}"
   when: keystone_apache_mod_wsgi_enabled | bool
 
 - name: Install IdP apt packages
@@ -51,7 +51,7 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: "{{ keystone_idp_apt_packages }}"
+  with_items: "{{ keystone_idp_packages }}"
   when:
     - keystone_apache_mod_wsgi_enabled | bool
     - keystone_idp != {}
@@ -64,7 +64,7 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: "{{ keystone_sp_apt_packages }}"
+  with_items: "{{ keystone_sp_packages }}"
   when:
     - keystone_apache_mod_wsgi_enabled | bool
     - keystone_sp != {}
@@ -77,6 +77,6 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: "{{ keystone_developer_apt_packages }}"
+  with_items: "{{ keystone_developer_packages }}"
   when:
     - keystone_developer_mode | bool

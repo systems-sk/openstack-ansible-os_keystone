@@ -17,6 +17,10 @@
   when:
     - ansible_pkg_mgr == 'apt'
 
+- include: keystone_install_yum.yml
+  when:
+    - ansible_pkg_mgr == 'yum'
+
 - name: Create WSGI symlinks
   file:
     src: "{{ item.src }}"
@@ -132,8 +136,8 @@
     - not keystone_developer_mode | bool
     - keystone_get_venv | changed or keystone_venv_dir | changed
   notify:
-    - Restart Apache
     - Restart Keystone APIs
+    - Restart service
 
 - name: Install pip packages
   pip:
@@ -149,8 +153,8 @@
   when:
     - keystone_get_venv | failed or keystone_developer_mode | bool
   notify:
-    - Restart Apache
     - Restart Keystone APIs
+    - Restart service
 
 - name: Update virtualenv path
   command: >

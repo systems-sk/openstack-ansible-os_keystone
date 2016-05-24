@@ -32,7 +32,7 @@
     creates: "/etc/shibboleth/sp-cert.pem"
   when: inventory_hostname == groups['keystone_all'][0]
   notify:
-    - Restart Apache
+    - Restart service
     - Restart Shibd
 
 - name: Store Shibboleth SP key-pair
@@ -69,7 +69,7 @@
   delay: 2
   when: inventory_hostname != groups['keystone_all'][0]
   notify:
-    - Restart Apache
+    - Restart service
     - Restart Shibd
 
 - name: Set appropriate file ownership on the Shibboleth SP key-pair
@@ -82,5 +82,5 @@
     - "/etc/shibboleth/sp-key.pem"
   when: inventory_hostname != groups['keystone_all'][0]
   notify:
-    - Restart Apache
+    - Restart service
     - Restart Shibd

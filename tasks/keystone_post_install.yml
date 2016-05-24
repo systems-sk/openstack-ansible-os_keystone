@@ -36,8 +36,8 @@
       config_overrides: "{{ keystone_policy_overrides }}"
       config_type: "json"
   notify:
-    - Restart Apache
     - Restart Keystone APIs
+    - Restart service
 
 - name: Drop Keystone Configs
   copy:
@@ -47,6 +47,6 @@
     group: "{{ keystone_system_group_name }}"
     mode: "0644"
   notify:
-    - Restart Apache
     - Restart Keystone APIs
+    - Restart service
 

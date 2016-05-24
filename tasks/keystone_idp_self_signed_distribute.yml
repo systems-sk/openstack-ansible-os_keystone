@@ -29,7 +29,8 @@
   until: memcache_keys|success
   retries: 5
   delay: 2
-  notify: Restart Apache
+  notify:
+    - Restart service
 
 - name: Set appropriate file ownership on the IdP self-signed cert
   file:
