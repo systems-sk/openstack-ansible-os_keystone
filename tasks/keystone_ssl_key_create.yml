@@ -18,8 +18,6 @@
     dest: "{{ keystone_ssl_cert }}"
     state: "absent"
   when: keystone_ssl_self_signed_regen | bool
-  tags:
-    - keystone-ssl
 
 - name: Create self-signed Apache ssl cert
   command: >
@@ -31,9 +29,6 @@
     -extensions v3_ca
     creates={{ keystone_ssl_cert }}
   notify: Restart Apache
-  tags:
-    - keystone-configs
-    - keystone-ssl
 
 - name: Ensure keystone user owns the self-signed key and certificate
   file:
@@ -45,5 +40,3 @@
     - "{{ keystone_ssl_key }}"
     - "{{ keystone_ssl_cert }}"
   notify: Restart Apache
-  tags:
-    - keystone-ssl

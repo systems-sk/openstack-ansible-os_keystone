@@ -25,8 +25,6 @@
     insecure: "{{ keystone_service_adminuri_insecure }}"
   with_dict: keystone_ldap
   run_once: true
-  tags:
-    - keystone-ldap-domain-create
 
 - name: Create Keystone LDAP domain configs
   template:
@@ -38,8 +36,6 @@
   with_dict: keystone_ldap
   notify:
     - Restart Apache
-  tags:
-    - keystone-ldap-domain-config
 
 # Bug 1547542 - Older versions of the keystone role would deploy a blank
 # keystone.Default.conf and this will cause errors when adding LDAP-backed
@@ -51,5 +47,3 @@
   when: keystone_ldap.Default is not defined
   notify:
     - Restart Apache
-  tags:
-    - keystone-ldap-domain-config

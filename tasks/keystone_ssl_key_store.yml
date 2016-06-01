@@ -18,20 +18,14 @@
     src: "{{ keystone_ssl_cert }}"
   register: _keystone_ssl_cert
   changed_when: false
-  tags:
-    - keystone-ssl
 
 - name: Store ssl key
   slurp:
     src: "{{ keystone_ssl_key }}"
   register: _keystone_ssl_key
   changed_when: false
-  tags:
-    - keystone-ssl
 
 - name: Register a fact for the cert and key
   set_fact:
     keystone_ssl_cert_fact: "{{ _keystone_ssl_cert.content }}"
     keystone_ssl_key_fact: "{{ _keystone_ssl_key.content }}"
-  tags:
-    - keystone-ssl

@@ -21,8 +21,6 @@
 - name: Set keystone_federated_identities fact
   keystone_sp:
     sp_data: "{{ keystone_sp }}"
-  tags:
-    - keystone-federation-sp
 
 - name: Ensure domain which remote IDP users are mapped onto exists
   keystone:
@@ -35,8 +33,6 @@
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.domain is defined
   with_items: keystone_federated_identities
-  tags:
-    - keystone-federation-sp
 
 - name: Ensure project which remote IDP users are mapped onto exists
   keystone:
@@ -50,8 +46,6 @@
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.project is defined
   with_items: keystone_federated_identities
-  tags:
-    - keystone-federation-sp
 
 - name: Ensure user which remote IDP users are mapped onto exists
   keystone:
@@ -70,8 +64,6 @@
     item.password is defined and
     item.project is defined
   with_items: keystone_federated_identities
-  tags:
-    - keystone-federation-sp
 
 - name: Ensure Group for external IDP users exists
   keystone:
@@ -85,8 +77,6 @@
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.group is defined
   with_items: keystone_federated_identities
-  tags:
-    - keystone-federation-sp
 
 - name: Ensure Role for external IDP users exists
   keystone:
@@ -101,8 +91,6 @@
     item.group is defined and
     item.project is defined
   with_items: keystone_federated_identities
-  tags:
-    - keystone-federation-sp
 
 - name: Ensure Group/Project/Role mapping exists
   keystone:
@@ -119,8 +107,6 @@
     item.group is defined and
     item.project is defined
   with_items: keystone_federated_identities
-  tags:
-    - keystone-federation-sp
 
 - name: Ensure mapping for external IDP attributes exists
   keystone:
@@ -134,8 +120,6 @@
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.protocol.mapping.name is defined
   with_items: keystone_federated_protocols
-  tags:
-    - keystone-federation-sp
 
 - name: Ensure external IDP
   keystone:
@@ -150,8 +134,6 @@
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.name is defined
   with_items: keystone_sp.trusted_idp_list
-  tags:
-    - keystone-federation-sp
 
 - name: Ensure federation protocol exists
   keystone:
@@ -166,5 +148,3 @@
     insecure: "{{ keystone_service_adminuri_insecure }}"
   when: item.protocol.name is defined
   with_items: keystone_federated_protocols
-  tags:
-    - keystone-federation-sp

@@ -27,5 +27,3 @@
   until: memcache_keys|success
   retries: 5
   delay: 2
-  tags:
-    - keystone-idp

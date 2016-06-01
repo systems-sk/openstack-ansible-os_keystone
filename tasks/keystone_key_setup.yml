@@ -14,11 +14,5 @@
 # limitations under the License.
 
 - include: keystone_key_populate.yml
-  tags:
-    - keystone-key
-    - keystone-key-create
 
 - include: keystone_key_distribute.yml
-  tags:
-    - keystone-key
-    - keystone-key-distribute

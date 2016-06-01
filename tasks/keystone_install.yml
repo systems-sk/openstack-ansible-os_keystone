@@ -16,8 +16,6 @@
 - include: keystone_install_apt.yml
   when:
     - ansible_pkg_mgr == 'apt'
-  tags:
-    - install-apt
 
 - name: Create developer mode constraint file
   copy:
@@ -28,9 +26,6 @@
       {% endfor %}
   when:
     - keystone_developer_mode | bool
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Clone requirements git repository
   git:
@@ -41,27 +36,18 @@
     version: "{{ keystone_requirements_git_install_branch }}"
   when:
     - keystone_developer_mode | bool
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Add constraints to pip_install_options fact for developer mode
   set_fact:
     pip_install_options_fact: "{{ pip_install_options|default('') }} --constraint /opt/developer-pip-constraints.txt --constraint /opt/requirements/upper-constraints.txt"
   when:
     - keystone_developer_mode | bool
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Set pip_install_options_fact when not in developer mode
   set_fact:
     pip_install_options_fact: "{{ pip_install_options|default('') }}"
   when:
     - not keystone_developer_mode | bool
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Install required pip packages
   pip:
@@ -73,9 +59,6 @@
   retries: 5
   delay: 2
   with_items: keystone_requires_pip_packages
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Get local venv checksum
   stat:
@@ -85,9 +68,6 @@
     - not keystone_developer_mode | bool
     - keystone_venv_enabled | bool
   register: local_venv_stat
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Get remote venv checksum
   uri:
@@ -97,9 +77,6 @@
     - not keystone_developer_mode | bool
     - keystone_venv_enabled | bool
   register: remote_venv_checksum
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 # TODO: When project moves to ansible 2 we can pass this a sha256sum which will:
 #       a) allow us to remove force: yes
@@ -118,17 +95,11 @@
     - keystone_venv_enabled | bool
     - (local_venv_stat.stat.exists == False or
         {{ local_venv_stat.stat.checksum is defined and local_venv_stat.stat.checksum != remote_venv_checksum.content | trim }})
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Set keystone get_venv fact
   set_fact:
     keystone_get_venv: "{{ get_venv }}"
   when: keystone_venv_enabled | bool
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Remove existing venv
   file:
@@ -137,9 +108,6 @@
   when:
     - keystone_venv_enabled | bool
     - keystone_get_venv | changed
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Create keystone venv dir
   file:
@@ -149,9 +117,6 @@
     - not keystone_developer_mode | bool
     - keystone_venv_enabled | bool
     - keystone_get_venv | changed
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Unarchive pre-built venv
   unarchive:
@@ -164,9 +129,6 @@
     - keystone_get_venv | changed
   notify:
     - Restart Apache
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Update virtualenv path
   command: >
@@ -175,9 +137,6 @@
     - not keystone_developer_mode | bool
     - keystone_venv_enabled | bool
     - keystone_get_venv | success
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Install pip packages (venv)
   pip:
@@ -196,9 +155,6 @@
     - keystone_get_venv | failed or keystone_developer_mode | bool
   notify:
     - Restart Apache
-  tags:
-    - keystone-install
-    - keystone-pip-packages
 
 - name: Install pip packages (no venv)
   pip:
@@ -215,6 +171,3 @@
     - not keystone_venv_enabled | bool
   notify:
     - Restart Apache
-  tags:
-    - keystone-install
-    - keystone-pip-packages

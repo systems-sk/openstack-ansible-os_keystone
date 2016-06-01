@@ -17,9 +17,5 @@
   when: >
     keystone_ssl | bool and
     (keystone_user_ssl_cert is not defined or keystone_user_ssl_key is not defined)
-  tags:
-    - keystone-ssl
 
 - include: keystone_ssl_user_provided.yml
-  tags:
-    - keystone-ssl

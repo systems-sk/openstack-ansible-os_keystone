@@ -31,38 +31,64 @@
     - always
 
 - include: keystone_pre_install.yml
+  tags:
+    - keystone-install
+
 - include: keystone_install.yml
+  tags:
+    - keystone-install
+
 - include: keystone_post_install.yml
+  tags:
+    - keystone-install
+    - keystone-config
 
 - include: keystone_key_setup.yml
   tags:
-    - keystone-key
-    - keystone-key-distribute
+    - keystone-install
 
 - include: keystone_fernet.yml
   tags:
-    - keystone-fernet
+    - keystone-install
+    - keystone-config
   when:
     - "'fernet' in keystone_token_provider"
     - keystone_service_setup | bool
 
 - include: keystone_federation_sp_setup.yml
+  tags:
+    - keystone-install
+    - keystone-config
   when:
     - keystone_sp is defined
 
 - include: keystone_db_setup.yml
+  tags:
+    - keystone-install
   when:
     - keystone_database_enabled | bool
     - inventory_hostname == groups['keystone_all'][0]
 
 - include: keystone_token_cleanup.yml
+  tags:
+    - keystone-install
   when:
     - "'sql' in keystone_token_driver"
 
 - include: keystone_ssl.yml
+  tags:
+    - keystone-install
+    - keystone-config
+
 - include: keystone_apache.yml
+  tags:
+    - keystone-install
+    - keystone-config
 
 - include: keystone_service_setup.yml
+  tags:
+    - keystone-install
+    - keystone-config
   when:
     - keystone_service_setup | bool
     - inventory_hostname == groups['keystone_all'][0]
@@ -71,10 +97,13 @@
   when:
     - keystone_service_setup | bool
   tags:
+    - keystone-install
     - keystone-config
-    - keystone-ldap
 
 - include: keystone_federation_sp_idp_setup.yml
+  tags:
+    - keystone-install
+    - keystone-config
   when:
     - keystone_service_setup | bool
     - keystone_sp is defined
@@ -84,5 +113,8 @@
   meta: flush_handlers
 
 - include: keystone_idp_setup.yml
+  tags:
+    - keystone-install
+    - keystone-config
   when:
     - keystone_idp is defined

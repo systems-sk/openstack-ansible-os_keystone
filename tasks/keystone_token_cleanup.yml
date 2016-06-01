@@ -19,5 +19,3 @@
     minute: 0
     job: "{{ keystone_bin }}/keystone-manage token_flush"
     user: "{{ keystone_system_user_name }}"
-  tags:
-    - keystone-config
