@@ -14,7 +14,7 @@
 
     LogLevel  {{  keystone_apache_log_level }}
     ErrorLog  /var/log/keystone/keystone-apache-error.log
-    CustomLog /var/log/keystone/ssl_access.log combined
+    CustomLog /var/log/keystone/ssl_access.log {{ keystone_apache_custom_log_format }}
     Options +FollowSymLinks
 
     {% if keystone_ssl | bool and keystone_service_internaluri_proto == "https" -%}
@@ -72,7 +72,7 @@
 
     LogLevel  {{  keystone_apache_log_level }}
     ErrorLog  /var/log/keystone/keystone-apache-error.log
-    CustomLog /var/log/keystone/ssl_access.log combined
+    CustomLog /var/log/keystone/ssl_access.log {{ keystone_apache_custom_log_format }}
     Options +FollowSymLinks
 
     {% if keystone_ssl | bool and keystone_service_adminuri_proto == "https" -%}
