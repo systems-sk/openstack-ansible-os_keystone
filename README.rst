@@ -45,6 +45,31 @@ Example Playbook
     - name: Installation and setup of Keystone
       hosts: keystone_all
       user: root
+      pre_tasks:
+        - name: Create DB for service
+          mysql_db:
+            login_user: "root"
+            login_password: "secrete"
+            login_host: "localhost"
+            name: "{{ keystone_galera_database }}"
+            state: "present"
+          delegate_to: "{{ keystone_galera_address }}"
+          when: inventory_hostname == groups['keystone_all'][0]
+        - name: Grant access to the DB for the service
+          mysql_user:
+            login_user: "root"
+            login_password: "secrete"
+            login_host: "localhost"
+            name: "{{ keystone_galera_database }}"
+            password: "{{ keystone_container_mysql_password }}"
+            host: "{{ item }}"
+            state: "present"
+            priv: "{{ keystone_galera_database }}.*:ALL"
+          with_items:
+            - "localhost"
+            - "%"
+          delegate_to: "{{ keystone_galera_address }}"
+          when: inventory_hostname == groups['keystone_all'][0]
       roles:
         - { role: "os_keystone", tags: [ "os-keystone" ] }
       vars:
