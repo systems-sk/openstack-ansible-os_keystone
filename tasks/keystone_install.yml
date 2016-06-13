@@ -17,6 +17,18 @@
   when:
     - ansible_pkg_mgr == 'apt'
 
+- name: Create WSGI symlinks
+  file:
+    src: "{{ item.src }}"
+    dest: "/var/www/cgi-bin/keystone/{{ item.dest }}"
+    state: link
+    force: yes
+  with_items:
+    - src: "{{ keystone_bin }}/keystone-wsgi-admin"
+      dest: admin
+    - src: "{{ keystone_bin }}/keystone-wsgi-public"
+      dest: main
+
 - name: Create developer mode constraint file
   copy:
     dest: "/opt/developer-pip-constraints.txt"
