@@ -65,15 +65,6 @@
     - { path: "/var/www/cgi-bin", owner: root, group: root }
     - { path: "/var/www/cgi-bin/keystone" }
 
-- name: Create keystone venv dir
-  file:
-    path: "{{ item.path }}"
-    state: directory
-  with_items:
-    - { path: "/openstack/venvs" }
-    - { path: "{{ keystone_venv_bin }}" }
-  when: keystone_venv_enabled | bool
-
 - name: Test for log directory or link
   shell: |
     if [ -h "/var/log/keystone"  ]; then

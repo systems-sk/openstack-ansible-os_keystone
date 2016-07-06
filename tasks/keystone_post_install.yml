@@ -60,15 +60,3 @@
     - { src: "keystone-wsgi.py.j2", dest: "/var/www/cgi-bin/keystone/main", mode: "0755" }
   notify:
     - Restart Apache
-
-- name: Get keystone command path
-  command: which keystone
-  register: keystone_command_path
-  when:
-    - not keystone_venv_enabled | bool
-
-- name: Set keystone command path
-  set_fact:
-    keystone_bin: "{{ keystone_command_path.stdout | dirname }}"
-  when:
-    - not keystone_venv_enabled | bool

@@ -29,15 +29,7 @@ keystone_developer_constraints:
 
 # Name of the virtual env to deploy into
 keystone_venv_tag: untagged
-keystone_venv_bin: "/openstack/venvs/keystone-{{ keystone_venv_tag }}/bin"
-
-# Set this to enable or disable installing in a venv
-keystone_venv_enabled: true
-
-# The bin path defaults to the venv path however if installation in a
-#  venv is disabled the bin path will be dynamically set based on the
-#  system path used when the installing.
-keystone_bin: "{{ keystone_venv_bin }}"
+keystone_bin: "/openstack/venvs/keystone-{{ keystone_venv_tag }}/bin"
 
 keystone_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/keystone.tgz
 
