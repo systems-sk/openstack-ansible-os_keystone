@@ -143,3 +143,6 @@
 - name: Update virtualenv path
   command: >
     virtualenv-tools --update-path=auto {{ keystone_bin | dirname }}
+  when:
+    - not keystone_developer_mode | bool
+    - keystone_get_venv | success
