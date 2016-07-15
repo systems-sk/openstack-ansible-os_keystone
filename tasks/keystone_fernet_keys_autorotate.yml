@@ -31,7 +31,7 @@
   cron:
     name: "Fernet auto rotate job"
     special_time: "{{ keystone_fernet_rotation }}"
-    user: "keystone"
+    user: "{{ keystone_system_user_name }}"
     job: "{{ keystone_fernet_auto_rotation_script }}"
     cron_file: keystone-fernet-rotate
   when: >
