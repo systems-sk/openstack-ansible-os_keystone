@@ -15,10 +15,19 @@ secure_proxy_ssl_header = {{ keystone_secure_proxy_ssl_header }}
 
 log_file = keystone.log
 log_dir = /var/log/keystone
+
+## RabbitMQ RPC
+{% if keystone_messaging_enabled | bool %}
 rpc_backend = {{ keystone_rpc_backend }}
+transport_url = rabbit://{% for host in keystone_rabbitmq_servers.split(',') %}{{ keystone_rabbitmq_userid }}:{{ keystone_rabbitmq_password }}@{{ host }}:{{ keystone_rabbitmq_port }}/{{ keystone_rabbitmq_vhost }}?rabbit_use_ssl={{ keystone_rabbitmq_use_ssl }},{% endfor %}
+
+[oslo_messaging_rabbit]
+{% endif %}
 
 {% if keystone_ceilometer_enabled %}
-notification_driver = messagingv2
+[oslo_messaging_notifications]
+driver = messagingv2
+transport_url = rabbit://{% for host in keystone_rabbitmq_telemetry_servers.split(',') %}{{ keystone_rabbitmq_telemetry_userid }}:{{ keystone_rabbitmq_telemetry_password }}@{{ host }}:{{ keystone_rabbitmq_telemetry_port }}/{{ keystone_rabbitmq_telemetry_vhost }}?rabbit_use_ssl={{ keystone_rabbitmq_telemetry_use_ssl }},{% endfor %}
 {% endif %}
 
 {% if 'memcache' in keystone_token_driver and 'fernet' not in keystone_token_provider %}
@@ -147,15 +156,7 @@ admin_bind_host = {{ keystone_bind_address }}
 admin_port = {{ keystone_admin_port }}
 public_port = {{ keystone_service_port }}
 
-{% if keystone_messaging_enabled | bool %}
-[oslo_messaging_rabbit]
-rabbit_port = {{ keystone_rabbitmq_port }}
-rabbit_userid = {{ keystone_rabbitmq_userid }}
-rabbit_password = {{ keystone_rabbitmq_password }}
-rabbit_virtual_host = {{ keystone_rabbitmq_vhost }}
-rabbit_hosts = {{ keystone_rabbitmq_servers }}
-rabbit_use_ssl = {{ keystone_rabbitmq_use_ssl }}
-{% endif %}
+
 
 {% if keystone_sp != {} %}
 [federation]

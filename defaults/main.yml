@@ -93,12 +93,21 @@ keystone_database_max_pool_size: 120
 keystone_database_pool_timeout: 30
 
 ## RabbitMQ info
+
+## Configuration for RPC communications
 keystone_messaging_enabled: true
 keystone_rabbitmq_port: 5671
 keystone_rabbitmq_userid: keystone
 keystone_rabbitmq_vhost: /keystone
 keystone_rabbitmq_servers: localhost
 keystone_rabbitmq_use_ssl: false
+
+## Configuration for notifications communication, i.e. [oslo_messaging_notifications]
+keystone_rabbitmq_telemetry_userid: "{{ keystone_rabbitmq_userid }}"
+keystone_rabbitmq_telemetry_vhost: "{{ keystone_rabbitmq_vhost }}"
+keystone_rabbitmq_telemetry_port: "{{ keystone_rabbitmq_port }}"
+keystone_rabbitmq_telemetry_servers: "{{ keystone_rabbitmq_servers }}"
+keystone_rabbitmq_telemetry_use_ssl: "{{ keystone_rabbitmq_use_ssl }}"
 
 ## Role info
 keystone_role_name: admin
