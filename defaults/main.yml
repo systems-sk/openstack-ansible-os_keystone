@@ -104,6 +104,7 @@ keystone_rabbitmq_use_ssl: false
 
 ## Configuration for notifications communication, i.e. [oslo_messaging_notifications]
 keystone_rabbitmq_telemetry_userid: "{{ keystone_rabbitmq_userid }}"
+keystone_rabbitmq_telemetry_password: "{{ keystone_rabbitmq_password }}"
 keystone_rabbitmq_telemetry_vhost: "{{ keystone_rabbitmq_vhost }}"
 keystone_rabbitmq_telemetry_port: "{{ keystone_rabbitmq_port }}"
 keystone_rabbitmq_telemetry_servers: "{{ keystone_rabbitmq_servers }}"
