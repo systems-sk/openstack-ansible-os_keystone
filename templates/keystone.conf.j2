@@ -19,21 +19,16 @@ log_dir = /var/log/keystone
 ## RabbitMQ RPC
 {% if keystone_messaging_enabled | bool %}
 rpc_backend = {{ keystone_rpc_backend }}
-transport_url = rabbit://{% for host in keystone_rabbitmq_servers.split(',') %}{{ keystone_rabbitmq_userid }}:{{ keystone_rabbitmq_password }}@{{ host }}:{{ keystone_rabbitmq_port }}/{{ keystone_rabbitmq_vhost }}?rabbit_use_ssl={{ keystone_rabbitmq_use_ssl }}{% if not loop.last %},{% endif %}{% endfor %}
+transport_url = rabbit://{% for host in keystone_rabbitmq_servers.split(',') %}{{ keystone_rabbitmq_userid }}:{{ keystone_rabbitmq_password }}@{{ host }}:{{ keystone_rabbitmq_port }}{% if not loop.last %},{% else %}/{{ keystone_rabbitmq_vhost }}{% endif %}{% endfor %}
 
 [oslo_messaging_rabbit]
-rabbit_port = {{ keystone_rabbitmq_port }}
-rabbit_userid = {{ keystone_rabbitmq_userid }}
-rabbit_password = {{ keystone_rabbitmq_password }}
-rabbit_virtual_host = {{ keystone_rabbitmq_vhost }}
-rabbit_hosts = {{ keystone_rabbitmq_servers }}
 rabbit_use_ssl = {{ keystone_rabbitmq_use_ssl }}
 {% endif %}
 
 {% if keystone_ceilometer_enabled %}
 [oslo_messaging_notifications]
 driver = messagingv2
-transport_url = rabbit://{% for host in keystone_rabbitmq_telemetry_servers.split(',') %}{{ keystone_rabbitmq_telemetry_userid }}:{{ keystone_rabbitmq_telemetry_password }}@{{ host }}:{{ keystone_rabbitmq_telemetry_port }}/{{ keystone_rabbitmq_telemetry_vhost }}?rabbit_use_ssl={{ keystone_rabbitmq_telemetry_use_ssl }}{% if not loop.last %},{% endif %}{% endfor %}
+transport_url = rabbit://{% for host in keystone_rabbitmq_telemetry_servers.split(',') %}{{ keystone_rabbitmq_telemetry_userid }}:{{ keystone_rabbitmq_telemetry_password }}@{{ host }}:{{ keystone_rabbitmq_telemetry_port }}{% if not loop.last %},{% else %}/{{ keystone_rabbitmq_telemetry_vhost }}{% endif %}{% endfor %}
 {% endif %}
 
 {% if 'memcache' in keystone_token_driver and 'fernet' not in keystone_token_provider %}
