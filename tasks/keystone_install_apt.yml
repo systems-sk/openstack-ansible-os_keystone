@@ -25,7 +25,7 @@
 - name: Install apt packages
   apt:
     pkg: "{{ item }}"
-    state: latest
+    state: "{{ keystone_package_state }}"
   register: install_packages
   until: install_packages|success
   retries: 5
@@ -35,7 +35,7 @@
 - name: Install IdP apt packages
   apt:
     pkg: "{{ item }}"
-    state: latest
+    state: "{{ keystone_package_state }}"
   register: install_packages
   until: install_packages|success
   retries: 5
@@ -46,7 +46,7 @@
 - name: Install SP apt packages
   apt:
     pkg: "{{ item }}"
-    state: latest
+    state: "{{ keystone_package_state }}"
   register: install_packages
   until: install_packages|success
   retries: 5
@@ -57,7 +57,7 @@
 - name: Install developer mode apt packages
   apt:
     pkg: "{{ item }}"
-    state: latest
+    state: "{{ keystone_package_state }}"
   register: install_packages
   until: install_packages|success
   retries: 5
