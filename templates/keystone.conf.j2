@@ -1,6 +1,8 @@
 # {{ ansible_managed }}
 
 [DEFAULT]
+# Disable stderr logging
+use_stderr = False
 debug = {{ debug }}
 {% if keystone_public_endpoint is defined %}
 public_endpoint = {{ keystone_public_endpoint }}
