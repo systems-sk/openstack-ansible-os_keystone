@@ -86,6 +86,7 @@
   tags:
     - keystone-install
     - keystone-config
+  when: keystone_apache_mod_wsgi_enabled | bool
 
 - name: Flush handlers
   meta: flush_handlers

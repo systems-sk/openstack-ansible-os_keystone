@@ -32,6 +32,17 @@
   delay: 2
   with_items: "{{ keystone_apt_packages }}"
 
+- name: Install Apache apt packages
+  apt:
+    pkg: "{{ item }}"
+    state: "{{ keystone_package_state }}"
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  with_items: "{{ keystone_apache_apt_packages }}"
+  when: keystone_apache_mod_wsgi_enabled | bool
+
 - name: Install IdP apt packages
   apt:
     pkg: "{{ item }}"
@@ -41,7 +52,9 @@
   retries: 5
   delay: 2
   with_items: "{{ keystone_idp_apt_packages }}"
-  when: keystone_idp != {}
+  when:
+    - keystone_apache_mod_wsgi_enabled | bool
+    - keystone_idp != {}
 
 - name: Install SP apt packages
   apt:
@@ -52,7 +65,9 @@
   retries: 5
   delay: 2
   with_items: "{{ keystone_sp_apt_packages }}"
-  when: keystone_sp != {}
+  when:
+    - keystone_apache_mod_wsgi_enabled | bool
+    - keystone_sp != {}
 
 - name: Install developer mode apt packages
   apt:

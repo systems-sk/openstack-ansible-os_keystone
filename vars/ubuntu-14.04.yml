@@ -15,14 +15,11 @@
 
 # Common apt packages
 keystone_apt_packages:
-  - apache2
-  - apache2-utils
   - debhelper
   - dh-apparmor
   - docutils-common
   - git
   - libffi-dev
-  - libapache2-mod-wsgi
   - libjs-sphinxdoc
   - libjs-underscore
   - libldap2-dev
@@ -39,3 +36,8 @@ keystone_idp_apt_packages:
 
 keystone_developer_apt_packages:
   - build-essential
+
+keystone_apache_apt_packages:
+  - apache2
+  - apache2-utils
+  - libapache2-mod-wsgi
