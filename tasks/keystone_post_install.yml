@@ -37,6 +37,7 @@
       config_type: "json"
   notify:
     - Restart Apache
+    - Restart Keystone APIs
 
 - name: Drop Keystone Configs
   copy:
@@ -47,4 +48,5 @@
     mode: "0644"
   notify:
     - Restart Apache
+    - Restart Keystone APIs
 

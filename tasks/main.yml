@@ -32,6 +32,18 @@
   tags:
     - always
 
+- name: Check init system
+  command: cat /proc/1/comm
+  register: _pid1_name
+  tags:
+    - always
+
+- name: Set the name of pid1
+  set_fact:
+    pid1_name: "{{ _pid1_name.stdout }}"
+  tags:
+    - always
+
 - include: keystone_pre_install.yml
   tags:
     - keystone-install
@@ -87,6 +99,13 @@
     - keystone-install
     - keystone-config
   when: keystone_apache_mod_wsgi_enabled | bool
+
+- include: keystone_uwsgi.yml
+  tags:
+    - keystone-install
+    - keystone-config
+  when:
+    - not keystone_apache_mod_wsgi_enabled | bool
 
 - name: Flush handlers
   meta: flush_handlers

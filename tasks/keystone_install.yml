@@ -133,6 +133,7 @@
     - keystone_get_venv | changed or keystone_venv_dir | changed
   notify:
     - Restart Apache
+    - Restart Keystone APIs
 
 - name: Install pip packages
   pip:
@@ -149,6 +150,7 @@
     - keystone_get_venv | failed or keystone_developer_mode | bool
   notify:
     - Restart Apache
+    - Restart Keystone APIs
 
 - name: Update virtualenv path
   command: >

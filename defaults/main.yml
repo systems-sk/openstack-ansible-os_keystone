@@ -181,6 +181,16 @@ keystone_httpd_mpm_thread_child: 25
 keystone_httpd_mpm_max_requests: 150
 keystone_httpd_mpm_max_conn_child: 0
 
+## uWSGI setup
+keystone_wsgi_public_program_name: keystone-wsgi-public
+keystone_wsgi_admin_program_name: keystone-wsgi-admin
+keystone_wsgi_program_names:
+  - "{{ keystone_wsgi_public_program_name }}"
+  - "{{ keystone_wsgi_admin_program_name }}"
+keystone_uwsgi_ports:
+  keystone-wsgi-public: 37358
+  keystone-wsgi-admin: 37359
+
 # set keystone_ssl to true to enable SSL configuration on the keystone containers
 keystone_ssl: false
 keystone_ssl_cert: /etc/ssl/certs/keystone.pem
@@ -403,6 +413,7 @@ keystone_pip_packages:
   - python-memcached
   - python-openstackclient
   - repoze.lru
+  - uWSGI
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
