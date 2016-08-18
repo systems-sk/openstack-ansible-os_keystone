@@ -54,6 +54,9 @@
 - include: keystone_ssl.yml
 - include: keystone_apache.yml
 
+- name: Flush handlers
+  meta: flush_handlers
+
 - include: keystone_service_setup.yml
   when:
     - keystone_service_setup | bool
