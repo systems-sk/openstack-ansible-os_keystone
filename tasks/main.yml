@@ -87,6 +87,9 @@
     - keystone-install
     - keystone-config
 
+- name: Flush handlers
+  meta: flush_handlers
+
 - include: keystone_service_setup.yml
   tags:
     - keystone-install
