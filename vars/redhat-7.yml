@@ -42,6 +42,9 @@ keystone_apache_packages:
   - httpd
   - httpd-tools
 
+keystone_nginx_packages:
+  - nginx
+
 keystone_idp_packages:
   - xmlsec1
 

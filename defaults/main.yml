@@ -184,6 +184,15 @@ keystone_httpd_mpm_thread_child: 25
 keystone_httpd_mpm_max_requests: 150
 keystone_httpd_mpm_max_conn_child: 0
 
+## Nginx setup
+keystone_nginx_access_log_format_combined: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"'
+keystone_nginx_access_log_format_extras: '$request_time $upstream_response_time'
+keystone_nginx_ports:
+  keystone-wsgi-public: "{{ keystone_service_port }}"
+  keystone-wsgi-admin: "{{ keystone_admin_port }}"
+keystone_nginx_extra_conf:
+  - keepalive_timeout   70;
+
 ## uWSGI setup
 keystone_wsgi_public_program_name: keystone-wsgi-public
 keystone_wsgi_admin_program_name: keystone-wsgi-admin
@@ -191,8 +200,12 @@ keystone_wsgi_program_names:
   - "{{ keystone_wsgi_public_program_name }}"
   - "{{ keystone_wsgi_admin_program_name }}"
 keystone_uwsgi_ports:
-  keystone-wsgi-public: 37358
-  keystone-wsgi-admin: 37359
+  keystone-wsgi-public:
+    http: 37358
+    socket: 35358
+  keystone-wsgi-admin:
+    http: 37359
+    socket: 5001
 
 # set keystone_ssl to true to enable SSL configuration on the keystone containers
 keystone_ssl: false

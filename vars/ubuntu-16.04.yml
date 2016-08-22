@@ -35,6 +35,9 @@ keystone_apache_packages:
   - apache2-utils
   - libapache2-mod-wsgi
 
+keystone_nginx_packages:
+  - nginx-full
+
 keystone_idp_packages:
   - ssl-cert
   - xmlsec1

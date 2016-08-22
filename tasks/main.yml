@@ -101,6 +101,12 @@
     - keystone-config
   when: keystone_apache_mod_wsgi_enabled | bool
 
+- include: keystone_nginx.yml
+  tags:
+    - keystone-install
+    - keystone-config
+  when: not keystone_apache_mod_wsgi_enabled | bool
+
 - include: keystone_uwsgi.yml
   tags:
     - keystone-install

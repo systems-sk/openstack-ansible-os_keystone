@@ -24,6 +24,16 @@
   delay: 2
   when: keystone_apache_mod_wsgi_enabled | bool
 
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
+  register: keystone_restart
+  until: keystone_restart | success
+  retries: 5
+  delay: 2
+  when: not keystone_apache_mod_wsgi_enabled | bool
+
 - name: Restart Keystone APIs
   service:
     name: "{{ item }}"
