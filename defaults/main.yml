@@ -169,7 +169,7 @@ keystone_apache_custom_log_format: combined
 keystone_apache_servertokens: "Prod"
 keystone_apache_serversignature: "Off"
 keystone_wsgi_threads: 1
-keystone_wsgi_processes: "{{ ansible_processor_vcpus | default (1) * 2 }}"
+keystone_wsgi_processes: "{{ (ansible_processor_vcpus | int > 0) | ternary (ansible_processor_vcpus, 1) * 2}}"
 
 ## Apache MPM tunables
 keystone_httpd_mpm_backend: event
