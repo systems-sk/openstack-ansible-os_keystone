@@ -14,16 +14,14 @@
 # limitations under the License.
 
 - name: Playbook for deploying keystone
-  hosts: keystone_all
+  hosts: "infra1"
   user: root
   gather_facts: true
-  pre_tasks:
+  tasks:
     - name: Ensure rabbitmq vhost
       rabbitmq_vhost:
         name: "{{ keystone_rabbitmq_vhost }}"
         state: "present"
-      delegate_to: "10.100.100.2"
-      when: inventory_hostname == groups['keystone_all'][0]
     - name: Ensure rabbitmq user
       rabbitmq_user:
         user: "{{ keystone_rabbitmq_userid }}"
@@ -33,22 +31,18 @@
         read_priv: ".*"
         write_priv: ".*"
         state: "present"
-      delegate_to: "10.100.100.2"
-      when: inventory_hostname == groups['keystone_all'][0]
     - name: Create DB for service
       mysql_db:
         login_user: "root"
         login_password: "secrete"
-        login_host: "localhost"
+        login_host: "127.0.0.1"
         name: "{{ keystone_galera_database }}"
         state: "present"
-      delegate_to: "10.100.100.2"
-      when: inventory_hostname == groups['keystone_all'][0]
     - name: Grant access to the DB for the service
       mysql_user:
         login_user: "root"
         login_password: "secrete"
-        login_host: "localhost"
+        login_host: "127.0.0.1"
         name: "{{ keystone_galera_database }}"
         password: "{{ keystone_container_mysql_password }}"
         host: "{{ item }}"
@@ -57,8 +51,13 @@
       with_items:
         - "localhost"
         - "%"
-      delegate_to: "10.100.100.2"
-      when: inventory_hostname == groups['keystone_all'][0]
+  vars_files:
+    - test-vars.yml
+
+- name: Playbook for deploying keystone
+  hosts: keystone_all
+  user: root
+  gather_facts: true
   roles:
     - role: "{{ rolename | basename }}"
   tasks:

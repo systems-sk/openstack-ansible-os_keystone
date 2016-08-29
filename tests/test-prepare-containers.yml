@@ -20,6 +20,7 @@
     - role: "lxc_container_create"
       lxc_container_release: trusty
       lxc_container_backing_store: dir
+      debug: true
       global_environment_variables:
         PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   post_tasks:

@@ -17,5 +17,5 @@
   authorized_key:
     user: "{{ keystone_system_user_name }}"
     key: "{{ hostvars[item]['keystone_pubkey'] | b64decode }}"
-  with_items: "{{ groups['keystone_all'] }}"
   when: hostvars[item]['keystone_pubkey'] is defined
+  with_items: "{{ groups['keystone_all'] }}"

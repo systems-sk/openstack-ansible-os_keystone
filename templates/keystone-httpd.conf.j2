@@ -56,6 +56,14 @@
 
     WSGIScriptAliasMatch ^(/v3/OS-FEDERATION/identity_providers/.*?/protocols/.*?/auth)$ /var/www/cgi-bin/keystone/main/$1
     {% endif %}
+
+    <Directory /var/www/cgi-bin/keystone>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
 </VirtualHost>
 
 <VirtualHost *:{{ keystone_admin_port }}>
@@ -88,4 +96,11 @@
     SSLCipherSuite {{ keystone_ssl_cipher_suite }}
     SSLOptions +StdEnvVars +ExportCertData
     {% endif %}
+
+    <Directory /var/www/cgi-bin/keystone>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
 </VirtualHost>

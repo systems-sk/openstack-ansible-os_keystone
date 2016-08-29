@@ -21,7 +21,8 @@
     group: "root"
     mode: "0644"
   when: keystone_user_ssl_cert is defined
-  notify: Restart Apache
+  notify:
+    - Restart service
 
 - name: Drop user provided ssl key
   copy:
@@ -31,7 +32,8 @@
     group: "root"
     mode: "0640"
   when: keystone_user_ssl_key is defined
-  notify: Restart Apache
+  notify:
+    - Restart service
 
 - name: Drop user provided ssl CA cert
   copy:
@@ -41,4 +43,5 @@
     group: "root"
     mode: "0644"
   when: keystone_user_ssl_ca_cert is defined
-  notify: Restart Apache
+  notify:
+    - Restart service

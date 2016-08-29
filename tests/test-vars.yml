@@ -28,10 +28,10 @@ keystone_rabbitmq_password: "secrete"
 keystone_rabbitmq_port: 5671
 keystone_rabbitmq_servers: 10.100.100.2
 keystone_rabbitmq_use_ssl: true
-keystone_ssl: true
 keystone_rabbitmq_userid: keystone
 keystone_rabbitmq_vhost: /keystone
 keystone_requirements_git_install_branch: master
+keystone_ssl: true
 keystone_service_adminuri: "http://{{ internal_lb_vip_address }}:35357"
 keystone_service_adminurl: "{{ keystone_service_adminuri }}/v3"
 keystone_service_password: "secrete"

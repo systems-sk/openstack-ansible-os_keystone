@@ -32,7 +32,8 @@
     creates={{ keystone_idp.certfile }}
   when: >
     inventory_hostname == groups['keystone_all'][0]
-  notify: Restart Apache
+  notify:
+    - Restart service
 
 - name: Set appropriate file ownership on the IdP self-signed cert
   file:
