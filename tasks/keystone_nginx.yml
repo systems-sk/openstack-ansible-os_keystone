@@ -19,7 +19,6 @@
     state: stopped
     pattern: "{{ keystone_system_service_name }}"
   failed_when: false
-  when: not keystone_apache_mod_wsgi_enabled | bool
 
 - name: Disable default configuration
   file:

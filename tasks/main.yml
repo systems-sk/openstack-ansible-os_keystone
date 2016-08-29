@@ -21,6 +21,15 @@
   tags:
     - always
 
+- name: Fail if incompatible configuration detected
+  fail:
+    msg: "keystone_apache_enabled must be True when keystone_mod_wsgi_enabled."
+  when:
+    - not keystone_apache_enabled | bool
+    - keystone_mod_wsgi_enabled | bool
+  tags:
+    - always
+
 - name: Gather variables for each operating system
   include_vars: "{{ item }}"
   with_first_found:
@@ -99,20 +108,19 @@
   tags:
     - keystone-install
     - keystone-config
-  when: keystone_apache_mod_wsgi_enabled | bool
+  when: keystone_apache_enabled | bool
 
 - include: keystone_nginx.yml
   tags:
     - keystone-install
     - keystone-config
-  when: not keystone_apache_mod_wsgi_enabled | bool
+  when: not keystone_apache_enabled | bool
 
 - include: keystone_uwsgi.yml
   tags:
     - keystone-install
     - keystone-config
-  when:
-    - not keystone_apache_mod_wsgi_enabled | bool
+  when: not keystone_apache_enabled | bool
 
 - name: Flush handlers
   meta: flush_handlers

@@ -56,7 +56,19 @@
   delay: 2
   with_items: "{{ keystone_apache_distro_packages }}"
   when:
-    - keystone_apache_mod_wsgi_enabled | bool
+    - keystone_apache_enabled | bool
+
+- name: Install mod_wsgi yum packages
+  yum:
+    pkg: "{{ item }}"
+    state: "{{ keystone_package_state }}"
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  with_items: "{{ keystone_mod_wsgi_distro_packages }}"
+  when:
+    - keystone_mod_wsgi_enabled | bool
 
 - name: Install Nginx yum packages
   yum:
@@ -68,7 +80,7 @@
   delay: 2
   with_items: "{{ keystone_nginx_distro_packages }}"
   when:
-    - not keystone_apache_mod_wsgi_enabled | bool
+    - not keystone_apache_enabled | bool
 
 - name: Install IdP yum packages
   yum:
