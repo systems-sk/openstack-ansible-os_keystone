@@ -13,9 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Common apt packages
-# The old name has been deprecated, remove the variables with the deprecation filers and change the package variable names.
-_keystone_packages:
+keystone_distro_packages:
   - debhelper
   - dh-apparmor
   - docutils-common
@@ -31,34 +29,23 @@ _keystone_packages:
   - python-dev
   - rsync
 
-keystone_packages: '{{ _keystone_packages | deprecated(keystone_apt_packages, "keystone_apt_packages", "keystone_packages", "ocata", keystone_fatal_deprecations) }}'
-
-keystone_apache_packages:
+keystone_apache_distro_packages:
   - apache2
   - apache2-utils
   - libapache2-mod-wsgi
 
-keystone_nginx_packages:
+keystone_nginx_distro_packages:
   - nginx-full
 
-# The old name has been deprecated, remove the variables with the deprecation filers and change the package variable names.
-_keystone_idp_packages:
+keystone_idp_distro_packages:
   - ssl-cert
   - xmlsec1
 
-keystone_idp_packages: '{{ _keystone_idp_packages | deprecated(keystone_idp_apt_packages, "keystone_idp_apt_packages", "keystone_idp_packages", "ocata", keystone_fatal_deprecations) }}'
-
-# The old name has been deprecated, remove the variables with the deprecation filers and change the package variable names.
-_keystone_sp_packages:
+keystone_sp_distro_packages:
   - libapache2-mod-shib2
 
-keystone_sp_packages: '{{ _keystone_sp_packages | deprecated(keystone_sp_apt_packages, "keystone_sp_apt_packages", "keystone_sp_packages", "ocata", keystone_fatal_deprecations) }}'
-
-# The old name has been deprecated, remove the variables with the deprecation filers and change the package variable names.
-_keystone_developer_packages:
+keystone_developer_distro_packages:
   - build-essential
-
-keystone_developer_packages: '{{ _keystone_developer_packages | deprecated(keystone_developer_apt_packages, "keystone_developer_apt_packages", "keystone_developer_packages", "ocata", keystone_fatal_deprecations) }}'
 
 keystone_apache_default_sites:
   - "/etc/apache2/sites-enabled/000-default.conf"

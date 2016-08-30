@@ -2,9 +2,3 @@
 features:
   - CentOS7/RHEL support has been added to the os_keystone
     role.
-deprecations:
-  - The following variables have been deprecated.
-    `keystone_developer_apt_packages`, `keystone_sp_apt_packages`,
-    `keystone_idp_apt_packages`, and `keystone_apt_packages`. While
-    these options are still available when deploying on Ubuntu
-    14.04, they will be removed during the Ocata cycle.

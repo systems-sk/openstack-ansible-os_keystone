@@ -21,7 +21,7 @@ keystone_shibboleth_repo:
   baseurl: "http://download.opensuse.org/repositories/security:/shibboleth/CentOS_7/"
   gpgkey: "http://download.opensuse.org/repositories/security:/shibboleth/CentOS_7//repodata/repomd.xml.key"
 
-keystone_packages:
+keystone_distro_packages:
   - ca-certificates
   - cronie
   - cronie-anacron
@@ -38,20 +38,20 @@ keystone_packages:
   - python-devel
   - rsync
 
-keystone_apache_packages:
+keystone_apache_distro_packages:
   - httpd
   - httpd-tools
 
-keystone_nginx_packages:
+keystone_nginx_distro_packages:
   - nginx
 
-keystone_idp_packages:
+keystone_idp_distro_packages:
   - xmlsec1
 
-keystone_sp_packages:
+keystone_sp_distro_packages:
   - shibboleth
 
-keystone_developer_packages:
+keystone_developer_distro_packages:
   - '@Development Tools'
 
 keystone_apache_default_sites:

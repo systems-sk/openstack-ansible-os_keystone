@@ -14,16 +14,16 @@
 # limitations under the License.
 
 - include: keystone_idp_self_signed_create.yml
-  when: >
-    inventory_hostname == groups['keystone_all'][0]
+  when:
+    - inventory_hostname == groups['keystone_all'][0]
 
 - include: keystone_idp_self_signed_store.yml
-  when: >
-    inventory_hostname == groups['keystone_all'][0]
+  when:
+    - inventory_hostname == groups['keystone_all'][0]
 
 - include: keystone_idp_self_signed_distribute.yml
-  when: >
-    inventory_hostname != groups['keystone_all'][0]
+  when:
+    - inventory_hostname != groups['keystone_all'][0]
 
 - include: keystone_idp_metadata.yml
 
