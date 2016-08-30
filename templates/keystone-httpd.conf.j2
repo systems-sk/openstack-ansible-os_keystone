@@ -57,12 +57,16 @@
     WSGIScriptAliasMatch ^(/v3/OS-FEDERATION/identity_providers/.*?/protocols/.*?/auth)$ /var/www/cgi-bin/keystone/main/$1
     {% endif %}
 
+    {% if keystone_mod_wsgi_enabled | bool -%}
     <Directory /var/www/cgi-bin/keystone>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         Order allow,deny
         allow from all
     </Directory>
+    {% else %}
+    ProxyPass / uwsgi://127.0.0.1:{{ keystone_uwsgi_ports[keystone-wsgi-public]["socket"] }}/
+    {% endif %}
 
 </VirtualHost>
 
@@ -97,10 +101,19 @@
     SSLOptions +StdEnvVars +ExportCertData
     {% endif %}
 
+    {% if keystone_mod_wsgi_enabled | bool -%}
     <Directory /var/www/cgi-bin/keystone>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         Order allow,deny
         allow from all
     </Directory>
+    {% else -%}
+    ProxyPass / uwsgi://127.0.0.1:{{ keystone_uwsgi_ports[keystone-wsgi-admin]["socket"] }}/
+    {% endif %}
+
 </VirtualHost>
+{% if not keystone_mod_wsgi_enabled | bool -%}
+ProxyPass /identity uwsgi://127.0.0.1:{{ keystone_uwsgi_ports[keystone-wsgi-public]['socket'] }}/
+ProxyPass /identity_admin uwsgi://127.0.0.1:{{ keystone_uwsgi_ports[keystone-wsgi-admin]['socket'] }}/
+{% endif %}
