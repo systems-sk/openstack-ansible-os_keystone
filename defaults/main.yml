@@ -207,6 +207,7 @@ keystone_uwsgi_ports:
   keystone-wsgi-admin:
     http: 37359
     socket: 5001
+keystone_uwsgi_ini_overrides: {}
 
 # set keystone_ssl to true to enable SSL configuration on the keystone containers
 keystone_ssl: false

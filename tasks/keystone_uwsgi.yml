@@ -20,10 +20,12 @@
     mode: "0711"
 
 - name: Apply uWSGI configuration
-  template:
+  config_template:
     src: "keystone-uwsgi.ini.j2"
     dest: "/etc/uwsgi/{{ item }}.ini"
     mode: "0744"
+    config_overrides: "{{ keystone_uwsgi_ini_overrides }}"
+    config_type: ini
   with_items: keystone_wsgi_program_names
   notify: Restart Keystone APIs
 
