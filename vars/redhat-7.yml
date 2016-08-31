@@ -30,8 +30,6 @@ keystone_distro_packages:
   - libgsasl-devel
   - libxml2-devel
   - libxslt-devel
-  - mod_ssl
-  - mod_wsgi
   - openldap
   - openldap-devel
   - openssl
@@ -41,6 +39,10 @@ keystone_distro_packages:
 keystone_apache_distro_packages:
   - httpd
   - httpd-tools
+  - mod_ssl
+
+keystone_mod_wsgi_distro_packages:
+  - mod_wsgi
 
 keystone_nginx_distro_packages:
   - nginx

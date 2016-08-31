@@ -166,7 +166,8 @@ keystone_service_adminurl: "{{ keystone_service_adminurl_v3 }}"
 #keystone_public_endpoint: "{{ keystone_service_publicuri }}"
 
 ## Apache setup
-keystone_apache_mod_wsgi_enabled: true
+keystone_apache_enabled: true
+keystone_mod_wsgi_enabled: true
 keystone_apache_log_level: info
 keystone_apache_custom_log_format: combined
 keystone_apache_servertokens: "Prod"

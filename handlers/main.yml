@@ -22,7 +22,7 @@
   until: _restart|success
   retries: 5
   delay: 2
-  when: keystone_apache_mod_wsgi_enabled | bool
+  when: (keystone_apache_enabled | bool) or (keystone_mod_wsgi_enabled | bool)
 
 - name: Restart Nginx
   service:
@@ -32,7 +32,7 @@
   until: keystone_restart | success
   retries: 5
   delay: 2
-  when: not keystone_apache_mod_wsgi_enabled | bool
+  when: not keystone_apache_enabled | bool
 
 - name: Restart Keystone APIs
   service:
@@ -43,7 +43,7 @@
   retries: 5
   delay: 2
   with_items: keystone_wsgi_program_names
-  when: not keystone_apache_mod_wsgi_enabled | bool
+  when: not keystone_mod_wsgi_enabled | bool
 
 - name: Restart Shibd
   service:

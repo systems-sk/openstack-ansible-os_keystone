@@ -32,6 +32,8 @@ keystone_distro_packages:
 keystone_apache_distro_packages:
   - apache2
   - apache2-utils
+
+keystone_mod_wsgi_distro_packages:
   - libapache2-mod-wsgi
 
 keystone_nginx_distro_packages:
