@@ -90,6 +90,6 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: "{{ keystone_developer_distro_packages }}"
+  with_items: "{{ keystone_developer_mode_distro_packages }}"
   when:
     - keystone_developer_mode | bool

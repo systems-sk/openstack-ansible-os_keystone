@@ -51,7 +51,7 @@ keystone_idp_distro_packages:
 keystone_sp_distro_packages:
   - shibboleth
 
-keystone_developer_distro_packages:
+keystone_developer_mode_distro_packages:
   - '@Development Tools'
 
 keystone_apache_default_sites:

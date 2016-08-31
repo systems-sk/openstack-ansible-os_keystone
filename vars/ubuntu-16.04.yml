@@ -44,7 +44,7 @@ keystone_idp_distro_packages:
 keystone_sp_distro_packages:
   - libapache2-mod-shib2
 
-keystone_developer_distro_packages:
+keystone_developer_mode_distro_packages:
   - build-essential
 
 keystone_apache_default_sites:
