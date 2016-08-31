@@ -53,7 +53,20 @@
   retries: 5
   delay: 2
   with_items: "{{ keystone_mod_wsgi_distro_packages }}"
-  when: keystone_mod_wsgi_enabled | bool
+  when:
+    - keystone_mod_wsgi_enabled | bool
+
+- name: Install mod_proxy_uwsgi apt packages
+  apt:
+    pkg: "{{ item }}"
+    state: "{{ keystone_package_state }}"
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  with_items: "{{ keystone_mod_proxy_uwsgi_distro_packages }}"
+  when:
+    - not keystone_mod_wsgi_enabled | bool
 
 - name: Install Nginx apt packages
   apt:
