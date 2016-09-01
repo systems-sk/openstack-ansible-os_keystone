@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 
 <VirtualHost *:{{ keystone_service_port }}>
+{% if keystone_mod_wsgi_enabled | bool -%}
     WSGIDaemonProcess     keystone-service user={{ keystone_system_user_name }} group={{ keystone_system_group_name }} processes={{ keystone_wsgi_processes }} threads={{ keystone_wsgi_threads }} display-name=%{GROUP} python-path={{ keystone_bin | dirname }}/lib/python2.7/site-packages
 
     WSGIProcessGroup      keystone-service
@@ -57,20 +58,19 @@
     WSGIScriptAliasMatch ^(/v3/OS-FEDERATION/identity_providers/.*?/protocols/.*?/auth)$ /var/www/cgi-bin/keystone/main/$1
     {% endif %}
 
-    {% if keystone_mod_wsgi_enabled | bool -%}
     <Directory /var/www/cgi-bin/keystone>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         Order allow,deny
         allow from all
     </Directory>
-    {% else %}
-    ProxyPass / uwsgi://127.0.0.1:{{ keystone_uwsgi_ports[keystone-wsgi-public]["socket"] }}/
-    {% endif %}
-
+{% else %}
+    ProxyPass / uwsgi://127.0.0.1:{{ keystone_uwsgi_ports['keystone-wsgi-public']['socket'] }}/
+{% endif %}
 </VirtualHost>
 
 <VirtualHost *:{{ keystone_admin_port }}>
+{% if keystone_mod_wsgi_enabled | bool -%}
     WSGIDaemonProcess     keystone-admin user={{ keystone_system_user_name }} group={{ keystone_system_group_name }} processes={{ keystone_wsgi_processes }} threads={{ keystone_wsgi_threads }} display-name=%{GROUP} python-path={{ keystone_bin | dirname }}/lib/python2.7/site-packages
 
     WSGIProcessGroup      keystone-admin
@@ -101,19 +101,17 @@
     SSLOptions +StdEnvVars +ExportCertData
     {% endif %}
 
-    {% if keystone_mod_wsgi_enabled | bool -%}
     <Directory /var/www/cgi-bin/keystone>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         Order allow,deny
         allow from all
     </Directory>
-    {% else -%}
-    ProxyPass / uwsgi://127.0.0.1:{{ keystone_uwsgi_ports[keystone-wsgi-admin]["socket"] }}/
-    {% endif %}
-
+{% else -%}
+    ProxyPass / uwsgi://127.0.0.1:{{ keystone_uwsgi_ports['keystone-wsgi-admin']["socket"] }}/
+{% endif %}
 </VirtualHost>
 {% if not keystone_mod_wsgi_enabled | bool -%}
-ProxyPass /identity uwsgi://127.0.0.1:{{ keystone_uwsgi_ports[keystone-wsgi-public]['socket'] }}/
-ProxyPass /identity_admin uwsgi://127.0.0.1:{{ keystone_uwsgi_ports[keystone-wsgi-admin]['socket'] }}/
+ProxyPass /identity uwsgi://127.0.0.1:{{ keystone_uwsgi_ports['keystone-wsgi-public']['socket'] }}/
+ProxyPass /identity_admin uwsgi://127.0.0.1:{{ keystone_uwsgi_ports['keystone-wsgi-admin']['socket'] }}/
 {% endif %}
