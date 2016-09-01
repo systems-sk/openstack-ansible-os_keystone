@@ -72,4 +72,6 @@ keystone_apache_configs:
   - { src: "keystone-httpd.conf.j2", dest: "/etc/httpd/conf.d/keystone-httpd.conf" }
   - { src: "keystone-httpd-mpm.conf.j2", dest: "/etc/httpd/conf.modules.d/mpm_{{ keystone_httpd_mpm_backend }}.conf" }
 
+keystone_nginx_conf_path: "conf.d"
+
 keystone_system_service_name: httpd
