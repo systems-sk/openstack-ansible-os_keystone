@@ -65,4 +65,6 @@ keystone_apache_configs:
   - { src: "keystone-httpd.conf.j2", dest: "/etc/apache2/sites-available/keystone-httpd.conf" }
   - { src: "keystone-httpd-mpm.conf.j2", dest: "/etc/apache2/mods-available/mpm_{{ keystone_httpd_mpm_backend }}.conf" }
 
+keystone_nginx_conf_path: "sites-available"
+
 keystone_system_service_name: apache2
