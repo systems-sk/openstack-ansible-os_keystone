@@ -99,3 +99,26 @@
     - ansible_pkg_mgr == 'apt'
   notify:
     - Restart service
+
+## NOTE(cloudnull):
+## Module enable/disable process is only functional on Debian based systems.
+- name: Enable/disable proxy_http
+  apache2_module:
+    name: proxy_http
+    state: "{{ (keystone_mod_wsgi_enabled | bool) | ternary('absent', 'present') }}"
+  when:
+    - ansible_pkg_mgr == 'apt'
+  notify:
+    - Restart service
+
+## NOTE(andymccr):
+## We need to enable a module for httpd on RedHat/CentOS using LoadModule inside conf files
+- name: Enable/disable proxy_uwsgi_module
+  lineinfile:
+    dest: '/etc/httpd/conf.modules.d/00-proxy.conf'
+    line: 'LoadModule proxy_uwsgi_module modules/mod_proxy_uwsgi.so'
+    state: "{{ (keystone_mod_wsgi_enabled | bool) | ternary('absent', 'present') }}"
+  when:
+   - ansible_pkg_mgr == 'yum'
+  notify:
+    - Restart service
