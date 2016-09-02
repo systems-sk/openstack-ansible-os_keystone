@@ -14,19 +14,19 @@
 # limitations under the License.
 
 # Prepare the user ssh keys
-- include: test-prepare-keys.yml
+- include: playbooks/test-prepare-keys.yml
 
 # Prepare the host
-- include: test-prepare-host.yml
+- include: playbooks/test-prepare-host.yml
 
 # Prepare the containers
-- include: test-prepare-containers.yml
+- include: playbooks/test-prepare-containers.yml
 
 # Install RabbitMQ/MariaDB
-- include: test-install-infra.yml
+- include: playbooks/test-install-infra.yml
 
 # Install Keystone
-- include: test-install-keystone.yml
+- include: playbooks/test-install-keystone.yml
 
 # Test Keystone
 - include: test-keystone-functional.yml

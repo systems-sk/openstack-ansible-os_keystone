@@ -69,4 +69,4 @@
       when: keystone_ssl_key_stats.stat.mode != "0640"
 
   vars_files:
-    - test-vars.yml
+    - playbooks/test-vars.yml
