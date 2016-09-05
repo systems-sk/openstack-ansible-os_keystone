@@ -28,5 +28,8 @@
 # Install Keystone
 - include: playbooks/test-install-keystone.yml
 
+# Install Tempest
+- include: playbooks/test-install-tempest.yml
+
 # Test Keystone
 - include: test-keystone-functional.yml

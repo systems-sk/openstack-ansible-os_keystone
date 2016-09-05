@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Test that users/projects etc are consistent on both keystone hosts
 - name: Playbook for functional testing keystone
   hosts: keystone_all
   user: root
@@ -67,6 +68,23 @@
       fail:
         msg: "Keystone SSL key permissions don't match 0640"
       when: keystone_ssl_key_stats.stat.mode != "0640"
+
+  vars_files:
+    - playbooks/test-vars.yml
+
+# Run tempest identity tests on one keystone host.
+- name: Playbook for functional testing keystone
+  hosts: keystone_all[0]
+  user: root
+  gather_facts: false
+  tasks:
+    # TODO(andymccr): add credentials functionality to keystone and remove the "credentials" exclusion.
+    - name: Run tempest
+      shell: |
+        . {{ tempest_venv_bin }}/activate
+        {{ tempest_venv_bin | dirname }}/run_tempest.sh --no-virtual-env ${RUN_TEMPEST_OPTS} '^tempest.api.identity((?!credentials).)*$'
+      environment:
+        RUN_TEMPEST_OPTS: "--serial"
 
   vars_files:
     - playbooks/test-vars.yml
