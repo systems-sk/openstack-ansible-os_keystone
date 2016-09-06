@@ -78,11 +78,10 @@
   user: root
   gather_facts: false
   tasks:
-    # TODO(andymccr): add credentials functionality to keystone and remove the "credentials" exclusion.
     - name: Run tempest
       shell: |
         . {{ tempest_venv_bin }}/activate
-        {{ tempest_venv_bin | dirname }}/run_tempest.sh --no-virtual-env ${RUN_TEMPEST_OPTS} '^tempest.api.identity((?!credentials).)*$'
+        {{ tempest_venv_bin | dirname }}/run_tempest.sh --no-virtual-env ${RUN_TEMPEST_OPTS} '^tempest.api.identity.*'
       environment:
         RUN_TEMPEST_OPTS: "--serial"
 

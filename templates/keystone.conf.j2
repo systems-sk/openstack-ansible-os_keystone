@@ -159,7 +159,8 @@ admin_bind_host = {{ keystone_bind_address }}
 admin_port = {{ keystone_admin_port }}
 public_port = {{ keystone_service_port }}
 
-
+[credential]
+key_repository = {{ keystone_credential_key_repository }}
 
 {% if keystone_sp != {} %}
 [federation]

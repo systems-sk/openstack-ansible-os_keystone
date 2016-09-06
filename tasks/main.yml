@@ -79,6 +79,12 @@
     - "'fernet' in keystone_token_provider"
     - keystone_service_setup | bool
 
+- include: keystone_credential.yml
+  when:
+    - keystone_service_setup | bool
+  tags:
+    - keystone-install
+
 - include: keystone_federation_sp_setup.yml
   tags:
     - keystone-install
