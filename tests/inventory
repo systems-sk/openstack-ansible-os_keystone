@@ -26,3 +26,6 @@ memcached_all
 [keystone_all]
 keystone1
 keystone2
+
+[utility_all]
+keystone1
