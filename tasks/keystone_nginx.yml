@@ -38,7 +38,7 @@
   template:
     src: keystone_nginx.conf.j2
     dest: "/etc/nginx/{{ keystone_nginx_conf_path }}/{{ item }}.conf"
-  with_items: keystone_wsgi_program_names
+  with_items: "{{ keystone_wsgi_program_names }}"
   notify: Restart Nginx
 
 - name: Link to enable virtual hosts
@@ -46,6 +46,6 @@
     src: "/etc/nginx/sites-available/{{ item }}.conf"
     path: "/etc/nginx/sites-enabled/{{ item }}.conf"
     state: link
-  with_items: keystone_wsgi_program_names
+  with_items: "{{ keystone_wsgi_program_names }}"
   when: ansible_os_family == "Debian"
   notify: Restart Nginx
