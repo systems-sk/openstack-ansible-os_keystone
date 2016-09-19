@@ -15,14 +15,14 @@
 
 - name: Wait for keystone admin to come up
   wait_for:
-    host: "{{ ansible_ssh_host }}"
+    host: "{{ ansible_host }}"
     port: "{{ keystone_admin_port }}"
     timeout: 25
     delay: 10
 
 - name: Wait for keystone service to come up
   wait_for:
-    host: "{{ ansible_ssh_host }}"
+    host: "{{ ansible_host }}"
     port: "{{ keystone_service_port }}"
     timeout: 25
     delay: 10
