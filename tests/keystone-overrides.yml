@@ -1,16 +1,2 @@
 ---
 install_test_packages: True
-
-# TODO:(andymccr) Override until we can merge this into master
-tempest_main_group: utility_all
-
-# TODO:(andymccr) We should fix this in the central-test repo so that we are smarter about this but for now lets hard code it.
-tempest_service_available_aodh: False
-tempest_service_available_ceilometer: False
-tempest_service_available_cinder: False
-tempest_service_available_glance: False
-tempest_service_available_heat: False
-tempest_service_available_horizon: False
-tempest_service_available_neutron: False
-tempest_service_available_nova: False
-tempest_service_available_swift: False
