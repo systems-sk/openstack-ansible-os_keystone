@@ -72,38 +72,41 @@
     - keystone-install
 
 - include: keystone_fernet.yml
-  tags:
-    - keystone-install
-    - keystone-config
+  static: no
   when:
     - "'fernet' in keystone_token_provider"
     - keystone_service_setup | bool
+  tags:
+    - keystone-install
+    - keystone-config
 
 - include: keystone_credential.yml
-  when:
-    - keystone_service_setup | bool
+  static: no
+  when: keystone_service_setup | bool
   tags:
     - keystone-install
 
 - include: keystone_federation_sp_setup.yml
+  static: no
+  when: keystone_sp != {}
   tags:
     - keystone-install
     - keystone-config
-  when:
-    - keystone_sp != {}
 
 - include: keystone_db_setup.yml
-  tags:
-    - keystone-install
+  static: no
   when:
     - keystone_database_enabled | bool
     - inventory_hostname == groups['keystone_all'][0]
-
-- include: keystone_token_cleanup.yml
   tags:
     - keystone-install
+
+- include: keystone_token_cleanup.yml
+  static: no
   when:
     - "'sql' in keystone_token_driver"
+  tags:
+    - keystone-install
 
 - include: keystone_ssl.yml
   tags:
@@ -111,56 +114,61 @@
     - keystone-config
 
 - include: keystone_apache.yml
+  static: no
+  when: keystone_apache_enabled | bool
   tags:
     - keystone-install
     - keystone-config
-  when: keystone_apache_enabled | bool
 
 - include: keystone_nginx.yml
+  static: no
+  when: not keystone_apache_enabled | bool
   tags:
     - keystone-install
     - keystone-config
-  when: not keystone_apache_enabled | bool
 
 - include: keystone_uwsgi.yml
+  static: no
+  when: not keystone_mod_wsgi_enabled | bool
   tags:
     - keystone-install
     - keystone-config
-  when: not keystone_mod_wsgi_enabled | bool
 
 - name: Flush handlers
   meta: flush_handlers
 
 - include: keystone_service_setup.yml
-  tags:
-    - keystone-install
-    - keystone-config
+  static: no
   when:
     - keystone_service_setup | bool
     - inventory_hostname == groups['keystone_all'][0]
+  tags:
+    - keystone-install
+    - keystone-config
 
 - include: keystone_ldap_setup.yml
-  when:
-    - keystone_service_setup | bool
+  static: no
+  when: keystone_service_setup | bool
   tags:
     - keystone-install
     - keystone-config
 
 - include: keystone_federation_sp_idp_setup.yml
-  tags:
-    - keystone-install
-    - keystone-config
+  static: no
   when:
     - keystone_service_setup | bool
     - keystone_sp != {}
     - inventory_hostname == groups['keystone_all'][0]
+  tags:
+    - keystone-install
+    - keystone-config
 
 - name: Flush handlers
   meta: flush_handlers
 
 - include: keystone_idp_setup.yml
+  static: no
+  when: keystone_idp != {}
   tags:
     - keystone-install
     - keystone-config
-  when:
-    - keystone_idp != {}

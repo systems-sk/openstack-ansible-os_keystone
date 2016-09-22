@@ -14,13 +14,13 @@
 # limitations under the License.
 
 - include: keystone_ssl_key_create.yml
-  when: >
-    inventory_hostname == groups['keystone_all'][0]
+  static: no
+  when: inventory_hostname == groups['keystone_all'][0]
 
 - include: keystone_ssl_key_store.yml
-  when: >
-    inventory_hostname == groups['keystone_all'][0]
+  static: no
+  when: inventory_hostname == groups['keystone_all'][0]
 
 - include: keystone_ssl_key_distribute.yml
-  when: >
-    inventory_hostname != groups['keystone_all'][0]
+  static: no
+  when: inventory_hostname != groups['keystone_all'][0]

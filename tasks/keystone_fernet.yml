@@ -14,11 +14,11 @@
 # limitations under the License.
 
 - include: keystone_fernet_keys_create.yml
-  when: >
-    inventory_hostname == groups['keystone_all'][0]
+  static: no
+  when: inventory_hostname == groups['keystone_all'][0]
 
 - include: keystone_fernet_keys_distribute.yml
-  when: >
-    inventory_hostname == groups['keystone_all'][0]
+  static: no
+  when: inventory_hostname == groups['keystone_all'][0]
 
 - include: keystone_fernet_keys_autorotate.yml
