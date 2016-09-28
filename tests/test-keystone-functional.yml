@@ -70,7 +70,7 @@
       when: keystone_ssl_key_stats.stat.mode != "0640"
 
   vars_files:
-    - playbooks/test-vars.yml
+    - common/test-vars.yml
 
 # Run tempest identity tests on one keystone host.
 - name: Playbook for functional testing keystone
@@ -86,4 +86,4 @@
         RUN_TEMPEST_OPTS: "--serial"
 
   vars_files:
-    - playbooks/test-vars.yml
+    - common/test-vars.yml
