@@ -122,3 +122,12 @@
    - ansible_pkg_mgr == 'yum'
   notify:
     - Restart service
+
+## NOTE(mgariepy):
+## We need to enable httpd on CentOS if not it won't start when the container is restarted.
+- name: Load service
+  service:
+    name: "{{ keystone_system_service_name }}"
+    enabled: "yes"
+  notify:
+    - Restart service
