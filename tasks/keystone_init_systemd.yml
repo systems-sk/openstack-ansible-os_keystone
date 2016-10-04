@@ -45,4 +45,7 @@
   command: "systemctl daemon-reload"
   when: systemd_init | changed
   notify:
-    - Restart Keystone APIs
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes

@@ -36,8 +36,10 @@
       config_overrides: "{{ keystone_policy_overrides }}"
       config_type: "json"
   notify:
-    - Restart Keystone APIs
-    - Restart service
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Copy Keystone Federation SP SSO callback template
   copy:
@@ -49,8 +51,10 @@
   when:
     - keystone_idp != {}
   notify:
-    - Restart Keystone APIs
-    - Restart service
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Clean up Keystone Federation SP SSO callback template
   file:
@@ -59,5 +63,7 @@
   when:
     - keystone_idp == {}
   notify:
-    - Restart Keystone APIs
-    - Restart service
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes

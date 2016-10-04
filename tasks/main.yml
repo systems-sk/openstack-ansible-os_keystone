@@ -85,6 +85,7 @@
   when:
     - keystone_database_enabled | bool
     - inventory_hostname == groups['keystone_all'][0]
+    - keystone_get_venv | changed or keystone_venv_dir | changed or install_packages | changed
   tags:
     - keystone-install
 

@@ -35,8 +35,10 @@
     mode: "0644"
   with_dict: "{{ keystone_ldap }}"
   notify:
-    - Restart Keystone APIs
-    - Restart service
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes
 
 # Bug 1547542 - Older versions of the keystone role would deploy a blank
 # keystone.Default.conf and this will cause errors when adding LDAP-backed
@@ -47,5 +49,7 @@
     state: absent
   when: keystone_ldap.Default is not defined
   notify:
-    - Restart Keystone APIs
-    - Restart service
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes
