@@ -28,8 +28,6 @@ keystone_shibboleth_repo: {}
 # of an OpenStack-Ansible repo_server.
 keystone_git_repo: https://git.openstack.org/openstack/keystone
 keystone_git_install_branch: stable/newton
-keystone_requirements_git_repo: https://git.openstack.org/openstack/requirements
-keystone_requirements_git_install_branch: stable/newton
 keystone_developer_mode: false
 keystone_developer_constraints:
   - "git+{{ keystone_git_repo }}@{{ keystone_git_install_branch }}#egg=keystone"
