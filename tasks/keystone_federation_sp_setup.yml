@@ -27,9 +27,10 @@
     - Restart Shibd
 
 - name: Generate the Shibboleth SP key-pair
-  shell: "shib-keygen -h {{ external_lb_vip_address }} -y {{ keystone_sp.cert_duration_years }}"
+  command: "shib-keygen -h {{ external_lb_vip_address }} -y {{ keystone_sp.cert_duration_years }}"
   args:
     creates: "/etc/shibboleth/sp-cert.pem"
+  changed_when: false
   when: inventory_hostname == groups['keystone_all'][0]
   notify:
     - Restart service

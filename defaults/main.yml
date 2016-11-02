@@ -16,9 +16,10 @@
 ## Verbosity Options
 debug: False
 
-# Set the package install state for distribution packages
+# Set the package install state for distribution and pip packages
 # Options are 'present' and 'latest'
 keystone_package_state: "latest"
+keystone_pip_package_state: "latest"
 
 # Role standard API override this option in the OS variable files
 keystone_shibboleth_repo: {}

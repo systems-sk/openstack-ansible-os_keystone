@@ -45,7 +45,7 @@
 - name: Install required pip packages
   pip:
     name: "{{ keystone_requires_pip_packages | join(' ') }}"
-    state: latest
+    state: "{{ keystone_pip_package_state }}"
     extra_args: >-
       {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
       {{ pip_install_options | default('') }}
@@ -121,7 +121,7 @@
 - name: Install pip packages
   pip:
     name: "{{ keystone_pip_packages | join(' ') }}"
-    state: latest
+    state: "{{ keystone_pip_package_state }}"
     virtualenv: "{{ keystone_bin | dirname }}"
     virtualenv_site_packages: "no"
     extra_args: >-

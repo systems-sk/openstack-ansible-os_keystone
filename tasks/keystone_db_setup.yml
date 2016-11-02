@@ -15,5 +15,6 @@
 
 - name: Perform a Keystone DB sync
   command: "{{ keystone_bin }}/keystone-manage db_sync"
+  changed_when: false
   become: yes
   become_user: "{{ keystone_system_user_name }}"
