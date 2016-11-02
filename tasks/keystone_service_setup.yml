@@ -41,6 +41,7 @@
      --bootstrap-internal-url {{ keystone_service_internalurl }}
   become: yes
   become_user: "{{ keystone_system_user_name }}"
+  changed_when: false
   register: add_service
   until: add_service|success
   retries: 5
