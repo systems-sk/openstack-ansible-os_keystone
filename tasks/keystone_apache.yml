@@ -25,6 +25,38 @@
     system: "yes"
     shell: "/bin/false"
 
+## Workaround for https://github.com/ansible/ansible-modules-core/issues/5328
+## TODO: Replace using apache2_module when fixed in Ansible release
+## NOTE(cloudnull):
+## Module enable/disable process is only functional on Debian based systems.
+- name: Enable/disable apache2 modules
+  command: "{{ (item.state == 'present') | ternary('a2enmod','a2dismod') }} {{ item.name }}"
+  register: horizon_apache2_module
+  changed_when:
+    - horizon_apache2_module.stdout.find('{{ item.name }} already') == -1
+    - horizon_apache2_module.stderr.find('{{ item.name }} does not exist') == -1
+  failed_when: false
+  with_items:
+    - "{{ { 'name': 'ssl', 'state': (keystone_ssl | bool) | ternary('present', 'absent') } }}"
+    - "{{ { 'name': 'shib2', 'state': ( keystone_sp != {} ) | ternary('present', 'absent') } }}"
+    - "{{ { 'name': 'proxy_http', 'state': (keystone_mod_wsgi_enabled | bool) | ternary('absent', 'present') } }}"
+  when:
+    - ansible_pkg_mgr == 'apt'
+  notify:
+    - Restart service
+
+## NOTE(andymccr):
+## We need to enable a module for httpd on RedHat/CentOS using LoadModule inside conf files
+- name: Enable/disable proxy_uwsgi_module
+  lineinfile:
+    dest: '/etc/httpd/conf.modules.d/00-proxy.conf'
+    line: 'LoadModule proxy_uwsgi_module modules/mod_proxy_uwsgi.so'
+    state: "{{ (keystone_mod_wsgi_enabled | bool) | ternary('absent', 'present') }}"
+  when:
+   - ansible_pkg_mgr == 'yum'
+  notify:
+    - Restart service
+
 - name: Drop apache2 config files
   template:
     src: "{{ item.src }}"
@@ -74,52 +106,6 @@
     dest: "{{ keystone_apache_security_conf }}"
     regexp: '^ServerSignature'
     line: "ServerSignature {{ keystone_apache_serversignature }}"
-  notify:
-    - Restart service
-
-## NOTE(cloudnull):
-## Module enable/disable process is only functional on Debian based systems.
-- name: Enable/disable mod_ssl for apache2
-  apache2_module:
-    name: ssl
-    state: "{{ (keystone_ssl | bool) | ternary('present', 'absent') }}"
-  when:
-    - ansible_pkg_mgr == 'apt'
-  notify:
-    - Restart service
-
-## NOTE(cloudnull):
-## Module enable/disable process is only functional on Debian based systems.
-- name: Enable/disable mod_shib2 for apache2
-  apache2_module:
-    name: shib2
-    state: "{{ ( keystone_sp != {} ) | ternary('present', 'absent') }}"
-  failed_when: false
-  when:
-    - ansible_pkg_mgr == 'apt'
-  notify:
-    - Restart service
-
-## NOTE(cloudnull):
-## Module enable/disable process is only functional on Debian based systems.
-- name: Enable/disable proxy_http
-  apache2_module:
-    name: proxy_http
-    state: "{{ (keystone_mod_wsgi_enabled | bool) | ternary('absent', 'present') }}"
-  when:
-    - ansible_pkg_mgr == 'apt'
-  notify:
-    - Restart service
-
-## NOTE(andymccr):
-## We need to enable a module for httpd on RedHat/CentOS using LoadModule inside conf files
-- name: Enable/disable proxy_uwsgi_module
-  lineinfile:
-    dest: '/etc/httpd/conf.modules.d/00-proxy.conf'
-    line: 'LoadModule proxy_uwsgi_module modules/mod_proxy_uwsgi.so'
-    state: "{{ (keystone_mod_wsgi_enabled | bool) | ternary('absent', 'present') }}"
-  when:
-   - ansible_pkg_mgr == 'yum'
   notify:
     - Restart service
 
