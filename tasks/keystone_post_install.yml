@@ -39,14 +39,25 @@
     - Restart Keystone APIs
     - Restart service
 
-- name: Drop Keystone Configs
+- name: Copy Keystone Federation SP SSO callback template
   copy:
     src: "sso_callback_template.html"
     dest: "/etc/keystone/sso_callback_template.html"
     owner: "{{ keystone_system_user_name }}"
     group: "{{ keystone_system_group_name }}"
     mode: "0644"
+  when:
+    - keystone_idp != {}
   notify:
     - Restart Keystone APIs
     - Restart service
 
+- name: Clean up Keystone Federation SP SSO callback template
+  file:
+    path: "/etc/keystone/sso_callback_template.html"
+    state: absent
+  when:
+    - keystone_idp == {}
+  notify:
+    - Restart Keystone APIs
+    - Restart service

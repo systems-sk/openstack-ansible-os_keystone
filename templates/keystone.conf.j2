@@ -110,7 +110,7 @@ provider = {{ keystone_token_provider }}
 driver = {{ keystone_token_driver }}
 {% endif %}
 
-{% if keystone_idp is defined and keystone_idp != {} %}
+{% if keystone_idp != {} %}
 [saml]
 certfile = "{{ keystone_idp.certfile }}"
 keyfile = "{{ keystone_idp.keyfile }}"

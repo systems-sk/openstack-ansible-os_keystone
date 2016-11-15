@@ -104,7 +104,7 @@
   delay: 2
   with_items: "{{ keystone_idp_distro_packages }}"
   when:
-    - keystone_idp is defined
+    - keystone_idp != {}
 
 #TODO(cloudnull) Remove this task once we move to Ansible 2.1
 # where we can leverage the `yum_repository` module:
@@ -127,7 +127,7 @@
   with_items:
     - "{{ keystone_shibboleth_repo }}"
   when:
-    - keystone_sp is defined
+    - keystone_sp != {}
 
 - name: Install SP yum packages
   yum:
@@ -139,7 +139,7 @@
   delay: 2
   with_items: "{{ keystone_sp_distro_packages }}"
   when:
-    - keystone_sp is defined
+    - keystone_sp != {}
 
 - name: Install developer mode yum packages
   yum:
