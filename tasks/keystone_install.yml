@@ -108,7 +108,7 @@
 
 - name: Update virtualenv path
   command: >
-    virtualenv-tools --update-path=auto {{ keystone_bin | dirname }}
+    virtualenv-tools --update-path=auto --reinitialize {{ keystone_bin | dirname }}
   when:
     - not keystone_developer_mode | bool
     - keystone_get_venv | changed or keystone_venv_dir | changed
