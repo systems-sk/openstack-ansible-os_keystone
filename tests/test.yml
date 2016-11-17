@@ -28,7 +28,7 @@
 # Install Keystone
 - include: common/test-install-keystone.yml
 
-# Install Tempest
+# Install and execute Tempest
 - include: common/test-install-tempest.yml
 
 # Test Keystone
