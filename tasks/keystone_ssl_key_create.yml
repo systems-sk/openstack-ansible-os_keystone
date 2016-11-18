@@ -29,7 +29,8 @@
     -extensions v3_ca
     creates={{ keystone_ssl_cert }}
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Ensure keystone user owns the self-signed key and certificate
   file:
@@ -41,4 +42,5 @@
     - "{{ keystone_ssl_key }}"
     - "{{ keystone_ssl_cert }}"
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes

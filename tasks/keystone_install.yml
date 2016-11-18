@@ -84,8 +84,10 @@
     - not keystone_developer_mode | bool
     - keystone_get_venv | changed or keystone_venv_dir | changed
   notify:
-    - Restart Keystone APIs
-    - Restart service
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Install pip packages
   pip:
@@ -103,8 +105,10 @@
   delay: 2
   when: keystone_developer_mode | bool
   notify:
-    - Restart Keystone APIs
-    - Restart service
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Update virtualenv path
   command: >

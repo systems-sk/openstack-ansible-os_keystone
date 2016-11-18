@@ -13,8 +13,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Perform a Keystone DB sync
-  command: "{{ keystone_bin }}/keystone-manage db_sync"
-  changed_when: false
+- name: Ensure keystone service stopped on first node
+  service:
+    name: "{{ item }}"
+    state: stopped
+  register: keystone_stop
+  failed_when:
+    - keystone_stop.msg is defined
+    - "'no service or tool' not in keystone_stop.msg"
+    - "'systemd could not find' not in keystone_stop.msg"
+    - "'Could not find the requested service' not in keystone_stop.msg"
+  with_items:
+    - "{{ keystone_wsgi_program_names }}"
+    - "{{ keystone_system_service_name }}"
+
+- name: Perform a Keystone DB sync expand
+  command: "{{ keystone_bin }}/keystone-manage db_sync --expand"
+  changed_when: true
   become: yes
   become_user: "{{ keystone_system_user_name }}"
+
+- name: Perform a Keystone DB sync migrate
+  command: "{{ keystone_bin }}/keystone-manage db_sync --migrate"
+  changed_when: true
+  become: yes
+  become_user: "{{ keystone_system_user_name }}"
+  notify:
+    - Perform a Keystone DB sync contract

@@ -25,6 +25,12 @@
 # Install RabbitMQ/MariaDB
 - include: common/test-install-infra.yml
 
+# Install previous Keystone
+- include: test-install-previous-keystone.yml
+  when:
+    - keystone_upgrade is defined
+    - keystone_upgrade | bool
+
 # Install Keystone
 - include: common/test-install-keystone.yml
 

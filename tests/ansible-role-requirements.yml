@@ -38,6 +38,10 @@
   src: https://git.openstack.org/openstack/openstack-ansible-openstack_openrc
   scm: git
   version: master
+- name: os_previous_keystone
+  src: https://git.openstack.org/openstack/openstack-ansible-os_keystone
+  scm: git
+  version: stable/newton
 - name: os_tempest
   src: https://git.openstack.org/openstack/openstack-ansible-os_tempest
   scm: git

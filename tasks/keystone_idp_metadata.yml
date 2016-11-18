@@ -20,5 +20,7 @@
   become_user: "{{ keystone_system_user_name }}"
   when: keystone_idp != {}
   notify:
-    - Restart Keystone APIs
-    - Restart service
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes

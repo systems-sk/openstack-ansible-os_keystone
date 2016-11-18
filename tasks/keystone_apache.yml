@@ -43,7 +43,8 @@
   when:
     - ansible_pkg_mgr == 'apt'
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes
 
 ## NOTE(andymccr):
 ## We need to enable a module for httpd on RedHat/CentOS using LoadModule inside conf files
@@ -55,7 +56,8 @@
   when:
    - ansible_pkg_mgr == 'yum'
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Drop apache2 config files
   template:
@@ -65,7 +67,8 @@
     group: "root"
   with_items: "{{ keystone_apache_configs }}"
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Disable default apache site
   file:
@@ -73,7 +76,8 @@
     state: "absent"
   with_items: "{{ keystone_apache_default_sites }}"
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Enabled keystone vhost
   file:
@@ -84,14 +88,16 @@
     - keystone_apache_site_available is defined
     - keystone_apache_site_enabled is defined
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Ensure Apache ServerName
   lineinfile:
     dest: "{{ keystone_apache_conf }}"
     line: "ServerName {{ ansible_hostname }}"
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Ensure Apache ServerTokens
   lineinfile:
@@ -99,7 +105,8 @@
     regexp: '^ServerTokens'
     line: "ServerTokens {{ keystone_apache_servertokens }}"
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Ensure Apache ServerSignature
   lineinfile:
@@ -107,7 +114,8 @@
     regexp: '^ServerSignature'
     line: "ServerSignature {{ keystone_apache_serversignature }}"
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes
 
 ## NOTE(mgariepy):
 ## We need to enable httpd on CentOS if not it won't start when the container is restarted.
@@ -116,4 +124,5 @@
     name: "{{ keystone_system_service_name }}"
     enabled: "yes"
   notify:
-    - Restart service
+    - Restart service on first node
+    - Restart service on other nodes

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Restart service
+- name: Restart service on first node
   service:
     name: "{{ keystone_system_service_name }}"
     state: restarted
@@ -22,9 +22,13 @@
   until: _restart|success
   retries: 5
   delay: 2
-  when: (keystone_apache_enabled | bool) or (keystone_mod_wsgi_enabled | bool)
+  when:
+    - inventory_hostname == groups['keystone_all'][0]
+    - (keystone_apache_enabled | bool) or (keystone_mod_wsgi_enabled | bool)
+  notify:
+    - Wait for keystone service port
 
-- name: Restart Nginx
+- name: Restart Nginx on first node
   service:
     name: nginx
     state: restarted
@@ -32,9 +36,11 @@
   until: keystone_restart | success
   retries: 5
   delay: 2
-  when: not keystone_apache_enabled | bool
+  when:
+    - inventory_hostname == groups['keystone_all'][0]
+    - not keystone_apache_enabled | bool
 
-- name: Restart Keystone APIs
+- name: Restart Keystone APIs on first node
   service:
     name: "{{ item }}"
     state: "restarted"
@@ -43,7 +49,58 @@
   retries: 5
   delay: 2
   with_items: "{{ keystone_wsgi_program_names }}"
-  when: not keystone_mod_wsgi_enabled | bool
+  when:
+    - inventory_hostname == groups['keystone_all'][0]
+    - not keystone_mod_wsgi_enabled | bool
+  notify:
+    - Wait for keystone service port
+
+- name: Wait for keystone service port
+  wait_for:
+    port: "{{ keystone_service_port }}"
+    timeout: 25
+    delay: 10
+  register: keystone_wait_check
+  until: keystone_wait_check | success
+  retries: 5
+
+- name: Restart service on other nodes
+  service:
+    name: "{{ keystone_system_service_name }}"
+    state: restarted
+    pattern: "{{ keystone_system_service_name }}"
+  register: _restart
+  until: _restart|success
+  retries: 5
+  delay: 2
+  when:
+    - inventory_hostname != groups['keystone_all'][0]
+    - (keystone_apache_enabled | bool) or (keystone_mod_wsgi_enabled | bool)
+
+- name: Restart Nginx on other nodes
+  service:
+    name: nginx
+    state: restarted
+  register: keystone_restart
+  until: keystone_restart | success
+  retries: 5
+  delay: 2
+  when:
+    - inventory_hostname != groups['keystone_all'][0]
+    - not keystone_apache_enabled | bool
+
+- name: Restart Keystone APIs on other nodes
+  service:
+    name: "{{ item }}"
+    state: "restarted"
+  register: keystone_restart
+  until: keystone_restart | success
+  retries: 5
+  delay: 2
+  with_items: "{{ keystone_wsgi_program_names }}"
+  when:
+    - inventory_hostname != groups['keystone_all'][0]
+    - not keystone_mod_wsgi_enabled | bool
 
 - name: Restart Shibd
   service:
@@ -54,3 +111,8 @@
   until: shibd_restart|success
   retries: 5
   delay: 2
+
+- name: Perform a Keystone DB sync contract
+  command: "{{ keystone_bin }}/keystone-manage db_sync --contract"
+  become: yes
+  become_user: "{{ keystone_system_user_name }}"

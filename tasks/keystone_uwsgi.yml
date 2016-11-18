@@ -27,7 +27,9 @@
     config_overrides: "{{ keystone_uwsgi_ini_overrides }}"
     config_type: ini
   with_items: "{{ keystone_wsgi_program_names }}"
-  notify: Restart Keystone APIs
+  notify:
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
 
 - include: keystone_init_common.yml
   vars:
@@ -36,7 +38,9 @@
     system_user: "{{ keystone_system_user_name }}"
     system_group: "{{ keystone_system_group_name }}"
     service_home: "{{ keystone_system_user_home }}"
-  notify: Restart Keystone APIs
+  notify:
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
 
 - include: keystone_init_common.yml
   vars:
@@ -45,7 +49,9 @@
     system_user: "{{ keystone_system_user_name }}"
     system_group: "{{ keystone_system_group_name }}"
     service_home: "{{ keystone_system_user_home }}"
-  notify: Restart Keystone APIs
+  notify:
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
 
 - name: Ensure uwsgi service started
   service:

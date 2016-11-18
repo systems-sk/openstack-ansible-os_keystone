@@ -21,11 +21,18 @@
     owner: "root"
     group: "root"
   register: upstart_init
-  notify: Restart Keystone APIs
+  notify:
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes
 
 - name: Reload init scripts
   command: initctl reload-configuration
   changed_when: false
   when: upstart_init | changed
   notify:
-    - Restart Keystone APIs
+    - Restart Keystone APIs on first node
+    - Restart Keystone APIs on other nodes
+    - Restart service on first node
+    - Restart service on other nodes
