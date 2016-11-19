@@ -245,7 +245,7 @@ keystone_secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
 ## LDAP Section
 # Define Keystone LDAP domain configuration here.
 # This may be used to add configuration for a LDAP identity back-end.
-# See the http://docs.openstack.org/admin-guide-cloud/keystone_integrate_with_ldap.html
+# See the http://docs.openstack.org/admin-guide/identity-integrate-with-ldap.html
 #
 # Each top-level entry is a domain name. Each entry below that are key: value pairs for
 # the ldap section in the domain-specific configuraiton file.
