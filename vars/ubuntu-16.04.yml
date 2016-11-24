@@ -48,6 +48,8 @@ keystone_idp_distro_packages:
 
 keystone_sp_distro_packages:
   - libapache2-mod-shib2
+  - python-memcache
+  - python-crypto
 
 keystone_developer_mode_distro_packages:
   - build-essential
