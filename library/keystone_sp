@@ -98,7 +98,8 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             sp_data=dict(
-                required=True
+                required=True,
+                type='dict'
             )
         ),
         supports_check_mode=False
